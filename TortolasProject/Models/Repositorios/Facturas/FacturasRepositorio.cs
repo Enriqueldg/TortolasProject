@@ -37,6 +37,10 @@ namespace TortolasProject.Models.Repositorios
         {
             return mtbMalagaDB.tbFactura.Where(f => f.FKPedidoGlobal.Equals(idPedidoGlobal)).SingleOrDefault();
         }
+        public Boolean existePedidoGlobal(Guid idPedidoGlobal)
+        {
+            return mtbMalagaDB.tbFactura.Where(f => f.FKPedidoGlobal.Equals(idPedidoGlobal)).Count() > 0;
+        }
 
         public void nuevaFactura(tbFactura f)
         {

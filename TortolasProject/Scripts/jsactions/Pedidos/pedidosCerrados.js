@@ -15,11 +15,11 @@ $(document).ready(function () {
         var fila = gridPedidos.dataSource.getByUid(uid);
         console.log(fila);
         id = fila.idPedido;
-        alert(id);
+        
         data = {
             idPedidoGlobal: id
         }
-        alert("cucu2");
+        
 
         url = 'facturarPedidoGlobal';
 
@@ -30,7 +30,7 @@ $(document).ready(function () {
 
     $(".botonEstablecerPagado").live('click', function () {
         var fila = $(".lineasPedido").find("tbody tr.k-state-selected");
-        var filajson = $(".lineasPedido").data("kendoGrid").dataItem(fila).toJSON();
+        var filajson = $(".lineasPedido").data("kendoGrid").dataItem(fila);
 
         id = filajson.idPedidoUsuario;
 
@@ -41,7 +41,7 @@ $(document).ready(function () {
         };
         url = 'facturarPedidoUsuario';
         $.post(url, data, function (data) {
-
+              
         });
     });
 

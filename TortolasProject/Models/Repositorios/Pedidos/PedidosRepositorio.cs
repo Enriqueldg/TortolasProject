@@ -56,6 +56,12 @@ namespace TortolasProject.Models.Repositorios
             mtbMalagaDB.tbPedidoGlobal.InsertOnSubmit(f);
             save();
         }
+        public void setTotalPedidoGlobal(Guid idPedidoGlobal, Decimal total)
+        {
+            tbPedidoGlobal pedidoGlobal = getPedidoGlobalById(idPedidoGlobal);
+            pedidoGlobal.Total = total;
+            save();
+        }
         //**************************************PEDIDOS USUARIO**********************************
         public IList<Guid> getArticulosByPedidoUsuario(Guid idPedidoUsuario)
         {

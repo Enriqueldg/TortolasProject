@@ -226,7 +226,7 @@ namespace TortolasProject.Controllers
         {
             Guid id = Guid.Parse(data["idPedidoGlobal"]);
             tbPedidoGlobal pedidoGlobal = PedidosRepo.getPedidoGlobalById(id);
-            if (FacturasRepo.leerFacturaByPedidoGlobal(pedidoGlobal.idPedidoGlobal) != null)
+            if (FacturasRepo.existePedidoGlobal(pedidoGlobal.idPedidoGlobal))
             {
 
                 IList<tbPedidoUsuario> pedidosUsuario = PedidosRepo.getPedidoUsuarioByPedido(id);
@@ -261,6 +261,8 @@ namespace TortolasProject.Controllers
                 }
                 f.BaseImponible = total;
                 FacturasController.crearFacturaExterna(f, lineasFactura);
+                
+                PedidosRepo.setTotalPedidoGlobal(pedidoGlobal.idPedidoGlobal, total);
             }
         }
         public void facturarPedidoUsuario(FormCollection data)

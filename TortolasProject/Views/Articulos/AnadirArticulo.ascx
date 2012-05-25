@@ -6,7 +6,7 @@
     </div>
 
     <div id="imagenText">
-    Imagen <input type="text" class="k-textbox necesario" id="imagenAnadirArticuloAutocomplete"/> 
+    Imagen <input type="text" id="imagenAnadirArticuloAutocomplete"/> 
     </div>
 
     <div id="descripcionText">
