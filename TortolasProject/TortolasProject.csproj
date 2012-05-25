@@ -115,11 +115,6 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Movimiento.cs" />
-    <Compile Include="Models\mtbMalaga.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>mtbMalaga.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Models\Repositorios\Account\AccountRepositorio.cs" />
     <Compile Include="Models\Repositorios\Eventos\CursillosRepositorio.cs" />
     <Compile Include="Models\Repositorios\Eventos\EventosRepositorio.cs" />
@@ -1136,7 +1131,6 @@
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

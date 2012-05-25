@@ -5,7 +5,7 @@
 </asp:Content>
 
 <asp:Content ID="PedidosIndexMain" ContentPlaceHolderID="MainContent" runat="server">
-
+    <img src="../../Content/images/titulopedidos.png" />
 <% if (User.Identity.IsAuthenticated && User.IsInRole("Junta Directiva"))
    { %>
         <div id="cerrarPedidoButton"><input type="button" class="k-button" value="Cerrar pedido" /></div>
