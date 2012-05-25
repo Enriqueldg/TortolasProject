@@ -14,6 +14,7 @@ namespace TortolasProject.Controllers
         mtbMalagaDataContext bd = new mtbMalagaDataContext();
         EventosRepositorio EventosRepo = new EventosRepositorio();
         UsuariosRepositorio UsuariosRepo = new UsuariosRepositorio();
+        FacturasRepositorio FacturasRepo = new FacturasRepositorio();
 
           //Index
         public ActionResult Index()
@@ -43,7 +44,11 @@ namespace TortolasProject.Controllers
                               FechaRealizacion = ob.FechaRealizacion.ToShortDateString(),
                               PrioridadSocios = ob.PrioridadSocios,
                               Plazas = ob.Plazas,
-                              NumAcompa = ob.NumAcompa
+                              NumAcompa = ob.NumAcompa,
+                              Tipo = EventosRepo.esOficial(ob.idEvento)==true ? "Oficial" : "Libre",
+                              Precio = EventosRepo.esOficial(ob.idEvento)==true ? EventosRepo.obtenerEventoOficialByIdEvento(ob.idEvento).Precio : 0,
+                              TotalParticipantes = EventosRepo.calcularTotalParticipantes(ob.idEvento),
+                              PlazasLibres = (ob.Plazas - EventosRepo.calcularTotalParticipantes(ob.idEvento))
                           };
             return Json(eventos);
         }
@@ -60,16 +65,39 @@ namespace TortolasProject.Controllers
                 idDocumentoInscripcion = idDocumentoInscripcion,
                 Pagado = false,
                 NumAcom = NumAcompa,
-                FKCursillo = null,
                 FKEvento = idEvento,
                 FKUsuario = FKUsuario
             };
             EventosRepo.inscripcionEvento(DocInscrip);
+
+            if (EventosRepo.esOficial(idEvento))
+            {
+                Guid idFactura = Guid.NewGuid();
+                tbFactura Factura = new tbFactura
+                {
+                    idFactura = idFactura,
+                    Concepto = "Inscripción Evento Oficial",
+                    FKEventoOficial = EventosRepo.obtenerEventoOficialByIdEvento(idEvento).idEventoOficial,
+                    FKUsuario = FKUsuario,
+                    Fecha = DateTime.Today,
+                    FKEstado = FacturasRepo.leerEstadoByNombre("Pendiente").idEstadoFactura
+                };
+                tbLineaFactura Linea = new tbLineaFactura
+                {
+                    idLineaFactura = Guid.NewGuid(),
+                    Descripcion = UsuariosRepo.obtenerUsuario(FKUsuario).Nickname,
+                    Unidades = (EventosRepo.obtenerAcompanantesEvento(idEvento, FKUsuario) + 1),
+                    PrecioUnitario = EventosRepo.obtenerEventoOficialByIdEvento(idEvento).Precio.HasValue ? EventosRepo.obtenerEventoOficialByIdEvento(idEvento).Precio.Value : 0,
+                    FKFactura = idFactura
+                };
+                IList<tbLineaFactura> lista = new List<tbLineaFactura>();
+                lista.Add(Linea);
+                FacturasController.crearFacturaExterna(Factura, lista);
+            }
             
         }
 
         [HttpPost]
-
         public void UpdateEvento(FormCollection data)
         {
             Guid idEvento = Guid.Parse(data["idEvento"]);
@@ -82,6 +110,8 @@ namespace TortolasProject.Controllers
             int NumAcompa = int.Parse(data["NumAcompaUpdate"]);
             bool PrioridadSocios = bool.Parse(data["PrioridadSociosUpdate"]);
             String Actividad = data["ActividadUpdate"];
+            String Tipo = data["Tipo"];
+            Decimal Precio = Decimal.Parse(data["PrecioUpdate"]);
 
             tbEvento Evento = new tbEvento
             {
@@ -97,7 +127,14 @@ namespace TortolasProject.Controllers
             };
 
             EventosRepo.editarEvento(idEvento,Evento);
+
+            if (Tipo=="Oficial")
+            {
+
+                EventosRepo.editarEventoOficial(idEvento, Precio);
+            }
         }
+
         [HttpPost]
         public void CreateEvento(FormCollection data)
         {
@@ -112,7 +149,11 @@ namespace TortolasProject.Controllers
             bool PrioridadSocios = bool.Parse(data["PrioridadSociosUpdate"]);
             String Actividad = data["ActividadUpdate"];
             Guid FKUsuario =  UsuariosRepo.obtenerUsuarioByUser(HomeController.obtenerUserIdActual());
-
+            Guid FKJuntaDirectiva = UsuariosRepo.obtenerSocio(UsuariosRepo.obtenerUsuarioByUser(HomeController.obtenerUserIdActual())).idSocio;
+            bool oficial = bool.Parse(data["TipoUpdate"]);
+            Decimal precioEvento = 0;
+            if (oficial) precioEvento = Decimal.Parse(data["PrecioEventoUpdate"]);
+            
             tbEvento Evento = new tbEvento
             {
                 idEvento = idEvento,
@@ -129,7 +170,22 @@ namespace TortolasProject.Controllers
             };
 
             EventosRepo.crearEvento(Evento);
+
+            if (oficial)
+            {
+                tbEventoOficial eventoOficial = new tbEventoOficial()
+                {
+                    idEventoOficial = Guid.NewGuid(),
+                    FKEvento = idEvento,
+                    FKJuntaDirectiva = FKJuntaDirectiva,
+                    Precio = precioEvento
+                };
+            EventosRepo.crearEventoOficial(eventoOficial);
+            }
+            
+            
         }
+
         [HttpPost]
         public void eliminarEvento(FormCollection data)
         {
@@ -137,6 +193,33 @@ namespace TortolasProject.Controllers
 
             EventosRepo.eliminarEvento(idEvento);
         }
+
+        [HttpPost]
+        public ActionResult participantesDeEvento(FormCollection data)
+        {
+            Guid idEvento = Guid.Parse(data["idEvento"]);
+
+            var participantes = from p in EventosRepo.participantesEvento(idEvento)
+                                select new
+                                {
+                                    idUsuario = p.idUsuario,
+                                    Nombre = p.Nombre,
+                                    Apellidos = p.Apellidos,
+                                    NumAcompa = EventosRepo.obtenerAcompanantesEvento(idEvento,p.idUsuario)
+                                };
+            return Json(participantes);
+        }
+
+        [HttpPost]
+        public Boolean comprobarInscrip(FormCollection data)
+        {
+            Guid idEvento = Guid.Parse(data["idEvento"]);
+            Guid Usuario = UsuariosRepo.obtenerUsuarioByUser(HomeController.obtenerUserIdActual());
+
+
+            return EventosRepo.existInscrip(idEvento, Usuario);
+        }
+
     }
 
 }

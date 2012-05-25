@@ -16,6 +16,7 @@ namespace TortolasProject.Controllers
         mtbMalagaDataContext bd = new mtbMalagaDataContext();
         CursillosRepositorio CursillosRepo = new CursillosRepositorio();
         UsuariosRepositorio UsuariosRepo = new UsuariosRepositorio();
+        FacturasRepositorio FacturasRepo = new FacturasRepositorio();
         
 
         public ActionResult Index()
@@ -46,7 +47,9 @@ namespace TortolasProject.Controllers
                                 Plazas = ob.Plazas,
                                 NumAcompa = ob.NumAcompa,
                                 DescuentoSocios = ob.DescuentoSocios,
-                                ConocimientosPrevios = ob.ConocimientosPrevios
+                                ConocimientosPrevios = ob.ConocimientosPrevios,
+                                TotalParticipantes = CursillosRepo.calcularTotalParticipantes(ob.idCursillo),
+                                PlazasLibres = (ob.Plazas - CursillosRepo.calcularTotalParticipantes(ob.idCursillo))
                             };
             return Json(cursillos);
         }
@@ -65,11 +68,31 @@ namespace TortolasProject.Controllers
                 Pagado = false,
                 NumAcom = NumAcompa,
                 FKCursillo = idCursillo,
-                FKEvento = null,
                 FKUsuario = FKUsuario
             };
             CursillosRepo.inscripcionCursillo(DocInscrip);
-            
+
+            Guid idFactura = Guid.NewGuid();
+            tbFactura Factura = new tbFactura
+            {
+                idFactura = idFactura,
+                Concepto = "Inscripción cursillo",
+                FKCursillo = idCursillo,
+                FKUsuario = FKUsuario,
+                Fecha = DateTime.Today,
+                FKEstado = FacturasRepo.leerEstadoByNombre("Pendiente").idEstadoFactura
+            };
+            tbLineaFactura Linea = new tbLineaFactura
+            {
+                idLineaFactura = Guid.NewGuid(),
+                Descripcion = UsuariosRepo.obtenerUsuario(FKUsuario).Nickname,
+                Unidades = (CursillosRepo.obtenerAcompanantesCursillo(idCursillo, FKUsuario) + 1),
+                PrecioUnitario = CursillosRepo.leerCursillo(idCursillo).Precio.HasValue? CursillosRepo.leerCursillo(idCursillo).Precio.Value : 0 ,
+                FKFactura = idFactura
+            };
+            IList<tbLineaFactura> lista = new List<tbLineaFactura>();
+            lista.Add(Linea);
+            FacturasController.crearFacturaExterna(Factura,lista);
         }
 
         [HttpPost]
@@ -125,8 +148,7 @@ namespace TortolasProject.Controllers
             bool DescuentoSocios = bool.Parse(data["DescuentoSociosUpdate"]);
             String Actividad = data["ActividadUpdate"];
             Decimal Precio = Decimal.Parse(data["PrecioUpdate"]);
-            Guid FKUsuario = Guid.Parse("718daa9e-2660-470a-9441-24817f3a27eb");
-
+            Guid FKUsuario = UsuariosRepo.obtenerSocio(UsuariosRepo.obtenerUsuarioByUser(HomeController.obtenerUserIdActual())).idSocio;
             tbCursillo Cursillo = new tbCursillo
             {
                 idCursillo = idCursillo,
@@ -155,5 +177,35 @@ namespace TortolasProject.Controllers
 
             CursillosRepo.eliminarCursillo(idCursillo);
         }
+
+        
+        [HttpPost]
+        public ActionResult participantesDeCursillo(FormCollection data)
+        {
+            Guid idCursillo = Guid.Parse(data["idCursillo"]);
+
+            var participantes = from p in CursillosRepo.participantesCursillo(idCursillo)
+                                select new
+                                {
+                                    idUsuario = p.idUsuario,
+                                    Nombre = p.Nombre,
+                                    Apellidos = p.Apellidos,
+                                    NumAcompa = CursillosRepo.obtenerAcompanantesCursillo(idCursillo,p.idUsuario),
+                                    PrecioPorGrupo = (CursillosRepo.leerCursillo(idCursillo).Precio) * (CursillosRepo.obtenerAcompanantesCursillo(idCursillo, p.idUsuario) + 1)
+                                };
+            return Json(participantes);
+        }
+
+        [HttpPost]
+        public Boolean comprobarInscrip(FormCollection data)
+        {
+            Guid idCursillo = Guid.Parse(data["idCursillo"]);
+            Guid Usuario = UsuariosRepo.obtenerUsuarioByUser(HomeController.obtenerUserIdActual());
+
+
+            return CursillosRepo.existInscrip(idCursillo, Usuario);
+        }
+
+    
     }
 }

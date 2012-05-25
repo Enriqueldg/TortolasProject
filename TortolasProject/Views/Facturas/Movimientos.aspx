@@ -6,7 +6,7 @@
 
 <asp:Content ID="MovimientosMainContent" ContentPlaceHolderID="MainContent" runat="server">
     <%Html.RenderPartial("facturasNav"); %>
-    <div id="MovimientosContainer"> 
+    <div id="facturaContainer"> 
 
         <div id="MovimientosGrid"></div>
 
@@ -18,6 +18,19 @@
             <br />
             <div id='descartarMovimiento' class='k-button'>Descartar</div>
             <div id='guardarMovimiento' class='k-button'>Crear movimiento</div>
+        </div>
+
+        <div id="FiltrosVentana"> 
+            <label for='filtroFecha'>Periodo</label>     
+            <div name='filtroFecha'>
+                <label for='FechaInicial'>Inicial</label>       <input id='fechaInicial'    name='FechaInicial'  /><br />
+                <label for='FechaFinal'>Final</label>         <input id='fechaFinal'    name='FechaFinal'  /><br />
+            </div>  
+            <label for='Concepto'>Concepto</label>          <input id='concepto'    type='text' name='Concepto' class='k-input' /><br />
+            <label for='Responsable'>Responsable</label>    <input id='responsable' type='text' name='Responsable' class='k-input' /><br />
+            
+            <br />
+            <div id='filtrarButton' class='k-button'>Filtrar</div>
         </div>
 
         <!-- 

@@ -54,5 +54,14 @@ namespace TortolasProject.Controllers
 
             PublicidadRepo.updatePub(publicidad);
         }
+
+        [HttpPost]
+        public void DeletePublicidad(FormCollection data)
+        {
+            Guid idPublicidad = Guid.Parse(data["idpublicidad"]);
+
+            PublicidadRepo.deletePub(idPublicidad);
+            //PatrocinadoresRepo.deleteEmp(idPatrocinador);
+        }
     }
 }

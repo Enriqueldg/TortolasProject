@@ -124,7 +124,7 @@
                                 }
                             }
                         }
-                    },
+                    }/*,
                     {
                         title: "Herramientas",
                         command:
@@ -132,7 +132,7 @@
                         //   { text: "editar", className: "editarfila" },
                             {text: "eliminar", className: "eliminarUsuario" }
                         ]
-                    }
+                    }*/
 
             ]
     });
@@ -161,7 +161,7 @@
             $(".tabSocio_" + e.data.idUsuario + " .carnetFechaAlta").append(socio.FechaAlta);
             $(".tabSocio_" + e.data.idUsuario + " .carnetNombre").append(e.data.Nombre);
             $(".tabSocio_" + e.data.idUsuario + " .carnetApellidos").append(e.data.Apellidos);
-            $(".tabSocio_" + e.data.idUsuario + " .carnetDNI").append(e.data.DNI);
+            $(".tabSocio_" + e.data.idUsuario + " .carnetDNI").append(e.data.DNI);            
         }
         // No es un socio
         else {
@@ -170,9 +170,30 @@
         }
 
         $(".tabSocio_" + e.data.idUsuario + " .botonCrearEnlazarSocio").click(function () {
-            enlazarUsuario(e.data.idUsuario);
+            var numeroSocio = $(".tabSocio_" + e.data.idUsuario + " .numeroSocio").val();
+            var fecha = $(".tabSocio_" + e.data.idUsuario + " .fechaExpiracionPicker").val();
+            if (fecha == "") {
+                alert("La fecha no puede ser vacia");
+            }
+            else {
+                if (numeroSocio == "")
+                    numeroSocio = 0;
+                enlazarUsuario(e.data.idUsuario, fecha, numeroSocio);
+            }
+
         });
+
+        $(".tabSocio_" + e.data.idUsuario + " .fechaExpiracionPicker").kendoDatePicker();
+
+        // Checkbox de especificacion de Numero de Socio
+        $(".checkNumeroSocio").click(function () {
+            $(".especificarNumeroSocio").toggle();
+            $(".numeroSocio").val(null);
+        });
+
     }
+
+
 
 
     // Boton de Creacion de un nuevo USUARIO
@@ -347,26 +368,43 @@
             }
         });
 
+
+        $(".botonCrearEnlazarSocio").qtip({
+            content: {
+                text: "<br>Este campo no es <font color='red'><b>modificable</b></font>.<br> No puede estar repetido en la Base de Datos."
+            },
+            position: {
+                my: "top left"
+            }
+        });
+
+        $(".fechaExpiracionPicker").qtip({
+            content: {
+                text: "Si la <b>Fecha de Expiracion</b> es anterior a la actual, su estado será <i>Inactivo</i> y si es mayor o igual sera <i>Activo</i>.<br> Para dar de Baja vaya a <u>Administracion de Socios</u> "
+            },
+            position: {
+                my: "top left"
+            }
+        });
+
+        $(".numeroSocio").qtip({
+            content: {
+                text: "Si especificas un numero de Socio debe ser uno que no <b>exista</b>."
+            },
+            position: {
+                my: "top left"
+            }
+        });
+
     }
 
 
-    // Funciones descartadas (MIGRAR A SOCIOS)
+    function enlazarUsuario(idUsuario, fecha, numerosocio) {
 
-
-    // Boton para crear un Socio y enlazarselo al Usuario
-    $("#nuevoSocioToolbar").click(function () {
-
-        var fila = $("#tablaAdminUsuarios").data("kendoGrid").select();          // Cogemos la fila seleccionada
-        var filaJson = $("#tablaAdminUsuarios").data("kendoGrid").dataItem(fila).toJSON();       // La pasamos a JSON
-        idUsuario = $("#tablaAdminUsuarios").data("kendoGrid").dataSource.getByUid(fila.attr("data-uid")).idUsuario;          // Obtenemos el idMonitor seleccionado
-        enlazarUsuario(idUsuario);
-    });
-
-    function enlazarUsuario(idUsuario) {
         $.ajax({
             url: "Usuarios/nuevoSocio",
             type: "POST",
-            data: { idUsuario: idUsuario },
+            data: { idUsuario: idUsuario, Fecha: fecha, NumeroSocio: numerosocio },
             success: function () {
                 $("#tablaAdminUsuarios").data("kendoGrid").dataSource.read();
             },

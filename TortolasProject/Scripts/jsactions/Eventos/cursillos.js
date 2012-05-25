@@ -32,7 +32,7 @@ $(document).ready(function () {
         columns: [
                     {
                         field: "Titulo",
-                        text: "Titulo",
+                        title: "Titulo",
                         filterable: {
                             extra: false, //do not show extra filters
                             operators: { // redefine the string operators
@@ -47,7 +47,7 @@ $(document).ready(function () {
                     },
                     {
                         field: "Lugar",
-                        text: "Lugar",
+                        title: "Lugar",
                         filterable: {
                             extra: false, //do not show extra filters
                             operators: { // redefine the string operators
@@ -62,7 +62,7 @@ $(document).ready(function () {
                     },
                     {
                         field: "Tematica",
-                        text: "Tematica",
+                        title: "Temática",
                         filterable: {
                             extra: false, //do not show extra filters
                             operators: { // redefine the string operators
@@ -77,7 +77,7 @@ $(document).ready(function () {
                     },
                     {
                         field: "FechaRealizacion",
-                        text: "Fecha",
+                        title: "Fecha",
                         filterable: {
                             extra: false, //do not show extra filters
                             operators: { // redefine the string operators
@@ -92,7 +92,7 @@ $(document).ready(function () {
                     },
                     {
                         field: "Plazas",
-                        text: "Plazas",
+                        title: "Plazas",
                         filterable: {
                             extra: false, //do not show extra filters
                             operators: { // redefine the string operators
@@ -108,7 +108,7 @@ $(document).ready(function () {
                     {
                         title: "Herramientas",
                         width: "200px",
-                        command: [{ text: "Editar", className: "botonEditarFila" }, { text: "Eliminar", className: "botonEliminarFila" }, { text: "Inscribirse", className: "botonInscripcion"}]
+                        command: [{ text: "Editar", className: "botonEditarFila" }, { text: "Eliminar", className: "botonEliminarFila"}]
                     }
             ],
         detailTemplate: kendo.template($("#template").html()),
@@ -298,7 +298,7 @@ $(document).ready(function () {
         var datos = {};
 
         datos["numacompa"] = 0;
-        if (!$("#AcompanantesDropdown").data("kendoDropDownList").value()) {
+        if ($("#AcompanantesDropdown").data("kendoDropDownList").value()) {
             datos["numacompa"] = $("#Acompanantes").val();
         }
         datos["idCursillo"] = idCursillo;
@@ -353,9 +353,121 @@ $(document).ready(function () {
                 open: { effects: "fadeIn" }
             }
         });
+
+
+        var participantes = new kendo.data.DataSource
+        ({
+            transport:
+            {
+                read:
+                {
+                    url: "../Cursillos/participantesDeCursillo",
+                    datype: "json",
+                    type: "POST",
+                    data: { idCursillo: e.data.idCursillo }
+                }
+            },
+            schema:
+            {
+                model:
+                {
+                    id: "idUsuario",
+                    fields:
+                    {
+                        Nombre: {},
+                        Apellidos: {},
+                        NumAcompa: {}
+                    }
+                }
+            }
+        });
+
+        var tablaParticipantes = $(".Participantes").kendoGrid
+        ({
+            dataSource: participantes,
+            sorteable: true,
+            pageable: true,
+            selectable: true,
+            filterable: true,
+            columns:
+            [
+                {
+                    field: "Nombre",
+                    title: "Nombre",
+                    filterable:
+                    {
+                        extra: false, //do not show extra filters
+                        operators:
+                            { // redefine the string operators
+                                string:
+                                {
+                                    eq: "Es igual a..",
+                                    neq: "No es igual a...",
+                                    startswith: "Empieza por...",
+                                    contains: "Contiene"
+                                }
+                            }
+                    }
+                },
+                {
+                    field: "Apellidos",
+                    title: "Apellidos",
+                    filterable:
+                    {
+                        extra: false, //do not show extra filters
+                        operators:
+                            { // redefine the string operators
+                                string:
+                                {
+                                    eq: "Es igual a..",
+                                    neq: "No es igual a...",
+                                    startswith: "Empieza por...",
+                                    contains: "Contiene"
+                                }
+                            }
+                    }
+                },
+                {
+                    field: "NumAcompa",
+                    title: "Num Acompañantes",
+                    filterable:
+                    {
+                        extra: false, //do not show extra filters
+                        operators:
+                            { // redefine the string operators
+                                string:
+                                {
+                                    eq: "Es igual a..",
+                                    neq: "No es igual a...",
+                                    startswith: "Empieza por...",
+                                    contains: "Contiene"
+                                }
+                            }
+                    }
+                },
+                {
+                    field: "PrecioPorGrupo",
+                    title: "Precio del grupo",
+                    filterable:
+                    {
+                        extra: false, //do not show extra filters
+                        operators:
+                            { // redefine the string operators
+                                string:
+                                {
+                                    eq: "Es igual a..",
+                                    neq: "No es igual a...",
+                                    startswith: "Empieza por...",
+                                    contains: "Contiene"
+                                }
+                            }
+                    }
+                }
+            ]
+        });
     }
 
-    $(".botonInscripcion").live("click", function () {
+    $("#botonInscripcion").live("click", function () {
 
         var fila = $("#Cursillostabla").data("kendoGrid").select();
         var filaJson = $("#Cursillostabla").data("kendoGrid").dataItem(fila).toJSON(); // La pasamos a JSON
@@ -365,26 +477,42 @@ $(document).ready(function () {
         idCursillo = Cursillo.idCursillo;
         var Precio = Cursillo.Precio;
         maxacompa = Cursillo.NumAcompa;
+        var inscripcionExistente;
 
-        $("#TituloCursilloInscripcion").text(Titulo);
-        $("#PrecioCursilloInscripcion").text(Precio);
-
-        $("#acompaWrapper").empty();
-        $("#acompaWrapper").html('<div id="NumeroAcompa"><label> Número de acompañantes: </label><input id="Acompanantes" /></div>');
-        $("#AcompanantesDropdown").data("kendoDropDownList").select(0);
-
-        $("#Acompanantes").kendoNumericTextBox({
-
-            min: 1,
-            max: maxacompa,
-            step: 1,
-            format: "0"
+        $.ajax
+        ({
+            url: "Cursillos/comprobarInscrip",
+            type: "POST",
+            data: { idCursillo: idCursillo },
+            async: false,
+            success: function (data) {
+                inscripcionExistente = data;
+            }
         });
+        if (inscripcionExistente == "False") {
+            $("#TituloCursilloInscripcion").text(Titulo);
+            $("#PrecioCursilloInscripcion").text(Precio);
 
-        $("#NumeroAcompa").hide();
+            $("#acompaWrapper").empty();
+            $("#acompaWrapper").html('<div id="NumeroAcompa"><label> Número de acompañantes: </label><input id="Acompanantes" /></div>');
+            $("#AcompanantesDropdown").data("kendoDropDownList").select(0);
 
-        windowInscripcion.center();
-        windowInscripcion.open();
+            $("#Acompanantes").kendoNumericTextBox
+            ({
+                min: 1,
+                max: maxacompa,
+                step: 1,
+                format: "0"
+            });
+
+            $("#NumeroAcompa").hide();
+
+            windowInscripcion.center();
+            windowInscripcion.open();
+        }
+        else {
+            alert("Ya está inscrito a este Cursillo")
+        }
     });
 
     $(".botonEliminarFila").live("click", function () {
@@ -403,4 +531,16 @@ $(document).ready(function () {
             }
         });
     });
+
+    setTimeout(cargarEtiqueta, 1000);
+    function cargarEtiqueta() {
+        $("#botonInscripcion").qtip({
+            content: {
+                text: "Seleccione un Evento y haga click para Inscribirse"
+            },
+            position: {
+                my: "top left"
+            }
+        });
+    }
 });

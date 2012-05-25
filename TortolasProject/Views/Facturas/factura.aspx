@@ -21,16 +21,19 @@
 <% String estado = Model.vista; %>
 <input type="hidden" id='estadoPage' value='<% Response.Write(estado); %>' />
 <input type="hidden" id='idFactura' value='<% Response.Write(Model.idFactura); %>' />
-    <div id='facturaForm' class='k-header'>
-        <div id='facturaHeader' class='k-content'>
+    <div id='facturaContainer' >
+        <div id='facturaHeader'>            
             <div id='volverButton' class='k-button'></div>
             <div id='poliButton' class='k-button'></div>
             <div id='eliminarButton' class='k-button'></div>
+            <div id='pdfButton'><%: Html.ActionLink("Descargar en PDF", "generarFacturaPDF", "Facturas", new { id = Model.idFactura.ToString() }, new { @class = "k-button" })%></div>
+        </div>
+        <div id='facturaDetalles'>            
             <div id='relacionesFacturaContainer'>
                 <div id='relacionesButton' class='k-button'>Añadir relación</div>
                 <div id='relacionesExistentesDiv'>
-                        <div id='relacionDiv'><% if( !estado.Equals("nueva") && Model.idRelacion != null ){ Response.Write(Model.idRelacion); } %></div>
-                        <div id='quitarRelacionButton' class='k-button'> X </div>
+                        <div id='relacionDiv'><% if( !estado.Equals("nueva") && Model.idRelacion != null ){ Response.Write(Model.RelacionName); } %></div>
+                        <div id='quitarRelacionButton'> x </div>
                 </div>
           
 
@@ -78,81 +81,111 @@
                 <!--                        -->
 
             </div>
+            <div id='facturaForm'>
+                    <div id='fechaFacturaDiv'>
+                        Fecha
+                        <div id='fechaFacturaLabel'><%
+                        if (estado.Equals("detalles") || estado.Equals("editar"))
+                           { 
+                               Response.Write(Model.Fecha.ToShortDateString());
+                           }               
+                         %>
+                         </div>   
+                        <div id='fechaFacturaContainer'>
+                            <input id='fechaFacturaInput' name='fecha' required validationMessage='Introduzca fecha' /><span class="k-invalid-msg" data-for="fecha"></span>
+                        </div>
+                    </div>
 
-            <div id='fechaFacturaDiv'>
-                Fecha
-                <div id='fechaFacturaLabel'><%
-                if (estado.Equals("detalles") || estado.Equals("editar"))
-                   { 
-                       Response.Write(Model.Fecha.ToShortDateString());
-                   }               
-                 %>
-                 </div>   
-                <div id='fechaFacturaContainer'>
-                    <input id='fechaFacturaInput' name='fecha' required validationMessage='Introduzca fecha' /><span class="k-invalid-msg" data-for="fecha"></span>
-                </div>
-            </div>
-
-            <div id='conceptoFacturaDiv'>
-                Concepto  
-                <div id='conceptoFacturaLabel'><% 
-                    if (Model.vista.Equals("detalles"))
-                   { 
-                      Response.Write(Model.Concepto);
-                   }
-                 %></div><%
-                   if( Model.vista.Equals("editar"))
-                   {
-                       %>
-                            <input type='text' id='conceptoFactura' name='concepto' class='k-input' value='<% Response.Write(Model.Concepto); %>' required validationMessage='Introduzca concepto' /><span class="k-invalid-msg" data-for="concepto"></span>
-                       <%
-                   }
-                   else
-                   {
+                    <div id='conceptoFacturaDiv'>
+                        Concepto  
+                        <div id='conceptoFacturaLabel'><% 
+                            if (Model.vista.Equals("detalles"))
+                           { 
+                              Response.Write(Model.Concepto);
+                           }
+                         %></div><%
+                           if( Model.vista.Equals("editar"))
+                           {
+                               %>
+                                    <input type='text' id='conceptoFactura' name='concepto' class='k-input' value='<% Response.Write(Model.Concepto); %>' required validationMessage='Introduzca concepto' /><span class="k-invalid-msg" data-for="concepto"></span>
+                               <%
+                           }
+                           else
+                           {
+                                %>
+                                    <input type='text' id='conceptoFactura' name='concepto' class='k-input' required validationMessage='Introduzca concepto' /><span class="k-invalid-msg" data-for="concepto"></span>
+                                <%
+                           }
                         %>
-                            <input type='text' id='conceptoFactura' name='concepto' class='k-input' required validationMessage='Introduzca concepto' /><span class="k-invalid-msg" data-for="concepto"></span>
-                        <%
-                   }
-                %>
-                </div>
+                        </div>
 
-            <div id='estadoFacturaDiv'>
-                Estado factura
-                <div id='estadoFacturaLabel'></div>
-                <div id='estadoFacturaDropDownListContainer'>
-                    <input id='estadoFacturaDropDownList' />
+                    <div id='estadoFacturaDiv'>
+                        Estado factura
+                        <div id='estadoFacturaLabel'></div>
+                        <div id='estadoFacturaDropDownListContainer'>
+                            <input id='estadoFacturaDropDownList' />
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
         
-        <div id='facturaLineasFacturaGrid'></div>
-        <div id='conceptoLineaFacturaWindow'>
-            <div id='conceptoLineaDiv'>
-                <div id='conceptoLineaLabel'>Concepto</div>
-                <input id='conceptoLinea' type='text' required />
-            </div>
-            <div id='articulosDiv'>
-                            <div id='articulosGrid'></div>
-            </div>
-        </div>
+            <div id='facturaLineasFacturaGrid'></div>
+        
 
-        <div id='totalFacturaDiv'>
-                <div id='baseImponibleLabel'>Base imponible</div>
-                <div id='baseImponibleNumero'><% if (!Model.vista.Equals("nueva")) Response.Write(Model.BaseImponible); else Response.Write(0); %></div>
-                <div id='ivaLabel'>IVA</div>
-                <div id='ivaNumero'>18%</div>
-                <div id='totalFacturaLabel'>
-                    Total
+            <div id='totalFacturaDiv'>
+                    <div id='baseImponibleLabel'>Base imponible</div>
+                    <div id='baseImponibleNumero'><% if (!Model.vista.Equals("nueva")) Response.Write(Model.BaseImponible); else Response.Write("0 €"); %></div>
+                    <div id='ivaLabel'>IVA</div>
+                    <div id='ivaNumero'>18%</div>
+                    <div id='totalFacturaLabel'>
+                        Total
+                    </div>
+                    <div id='totalFacturaNumero'>
+                    <% if (!Model.vista.Equals("nueva")) Response.Write(Model.Total); else Response.Write("0 €"); %>
+                    </div>
+            </div>
+            <div id='facturaBottom'>
+                <div id='descartarFacturaButton' class='k-button'>Descartar</div>
+                <div id='guardarFacturaButton' class='k-button'>Guardar</div>
+                <div class='status' class='k-invalid-msg'></div>
+            </div>
+        
+        
+            <div id='lineaFacturaWindow'>
+                <div id='statusLinea' class='k-invalid-msg'></div>
+                <div id='lineaFacturaForm'>
+                    <div id='conceptoLineaDiv'>
+                        <div id='conceptoLineaLabel'>Concepto</div>
+                        <div id='conceptoContainer'>
+                            <input id='conceptoLinea' type='text' class='k-input' required validationMessage='Introduzca concepto,'/><span class="k-invalid-msg" data-for="conceptoLinea"></span>
+                            <div id='quitarArticulo'>X</div>
+                        </div>                
+                    </div>
+                    <div id='articulosDiv'>                                
+                                        <div id='articulosGrid'></div>
+                                        <div id='agregarArticuloConcepto' class='k-button'>Agregar</div>
+                    </div>
+                    <div class='k-grid k-widget'>
+                        <table>                    
+                                <tr class='k-grid-header'>
+                                    <th>Unidades</th>
+                                    <th>Precio unitario</th>
+                                    <th>Total</th>  
+                                </tr>
+                                <tr>
+                                    <td class='k-grid-content'><input id='unidadesLinea' min='0' required validationMessage='Introduzca unidades.'/><span class="k-invalid-msg" data-for="unidadesLinea"></span></td>
+                                    <td class='k-grid-content'><input id='precioLinea' required  validationMessage='Introduzca precio.'/><span class="k-invalid-msg" data-for="precioLinea"></span></td>
+                                    <td class='k-grid-content'><div id='totalLinea'></div></td>
+                                </tr>  
+                                               
+                        </table>
+                    </div>
+                    <div id = 'lineaFacturaWindowBottom'>
+                        <div id='descartarLinea' class='k-button'>Descartar</div>
+                        <div id='agregarLinea' class='k-button'>Añadir</div>
+                    </div>
                 </div>
-                <div id='totalFacturaNumero'>
-                <%// if (!Model.vista.Equals("nueva")) Response.Write(Model.Total); else Response.Write(0); %>
-                </div>
+            </div>
         </div>
-        <div id='facturaBottom'>
-            <div id='descartarFacturaButton' class='k-button'>Descartar</div>
-            <div id='guardarFacturaButton' class='k-button'>Guardar</div>
-            <div class='status' class='k-invalid-msg'></div>
-        </div>
-    </div>
 
 </asp:Content>

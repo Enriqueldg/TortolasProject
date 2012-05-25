@@ -15,5 +15,7 @@ namespace TortolasProject.Models
         public String ResponsableName { get; set; }
         public Guid FKFactura { get; set; }
         public Decimal Total { get; set; }
+        public int NumMovimiento { get; set; }
+        public Decimal Saldo { get; set; }
     }
 }

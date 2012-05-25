@@ -1,17 +1,29 @@
-﻿#FacturasContainer
-{
-    float:left;
-    margin-top:10px;
-    width:inherit;
-}
-#FacturasGrid 
+﻿#FacturasGrid 
 {
     position:relative;
     float:left;
     width:inherit;
+    height:inherit;
+}
+#FacturasGrid a
+{
+    color:#2E2E2E;
 }
 .limpiarButton
 {
     float:right;
+}
+.pageSizeDropDownContainer
+{
+    position:relative;
+    float:right;
+}
+.pageSizeDropDown
+{
+    width:50px;
+}
+.filtrosCheckBox input
+{
+    margin-left: 10px;
 }
 

@@ -1,10 +1,4 @@
-﻿#MovimientosContainer 
-{
-    float:left;
-    margin-top:10px;
-    width:inherit;
-}
-.limpiarButton
+﻿.limpiarButton
 {
     float:right;
 }

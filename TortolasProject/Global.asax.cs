@@ -20,7 +20,7 @@ namespace TortolasProject
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            //routes.IgnoreRoute("Informes/{resource}.aspx/{*pathInfo}");
             routes.MapRoute(
                 "Default", // Nombre de ruta
                 "{controller}/{action}/{id}", // URL con parámetros

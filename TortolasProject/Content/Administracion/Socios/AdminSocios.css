@@ -13,3 +13,45 @@
 {
     list-style-type:none;
 }
+
+h1
+{
+    margin-left: 40px;
+}
+
+.toolbarIzq
+{
+    float:left;
+}
+
+.toolbarDer
+{
+    float:right;
+}
+
+
+.ventanaWrapper
+{    
+    padding: 10px 20px 20px 30px;
+}
+
+.ventanaWrapper label
+{    
+    margin-left: 20%;
+}
+
+.ventanaWrapper .k-button
+{    
+    margin-left: 25%;
+}
+
+#usuarioRandom
+{    
+    margin-left: 25%;
+}
+
+
+.k-invalid,k-invalid:hover
+{
+    border : 1px solid red;
+}

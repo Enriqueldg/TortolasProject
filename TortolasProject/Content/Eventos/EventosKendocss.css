@@ -1,2 +1,10 @@
-﻿body {
+﻿.infoPlazas
+{
+    margin:0px;
+    padding:0px;
+}
+.infoPlazas li
+{
+    list-style:none;
+    display:inline;
 }

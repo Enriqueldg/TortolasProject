@@ -8,12 +8,12 @@ namespace TortolasProject.Models.Repositorios
     public class EmpresasRepositorio
     {
         mtbMalagaDataContext mtbMalagaDB = new mtbMalagaDataContext();
-
+        
         // EMPRESAS //
 
         public IList<tbEmpresa> ListarEmpresas()
         {
-            return mtbMalagaDB.tbEmpresa.ToList();
+            return mtbMalagaDB.tbEmpresa.ToList<tbEmpresa>();
         }
 
         public tbEmpresa buscaremp(Guid idemp)
@@ -61,7 +61,7 @@ namespace TortolasProject.Models.Repositorios
 
         public IList<tbAsociacion> ListarAsociaciones()
         {
-            return mtbMalagaDB.tbAsociacion.ToList();
+            return mtbMalagaDB.tbAsociacion.ToList<tbAsociacion>();
         }
 
         public void updateAsoc(tbAsociacion asoc)
@@ -140,7 +140,7 @@ namespace TortolasProject.Models.Repositorios
 
         public void updatePat(tbPatrocinador pat)
         {
-            tbPatrocinador original = buscarpat(pat.FKCodigoEmpresa);
+            tbPatrocinador original = buscarpat(pat.idPatrocinador);
 
             original.LocalizacionPublicidad = pat.LocalizacionPublicidad;
 
@@ -182,6 +182,12 @@ namespace TortolasProject.Models.Repositorios
             mtbMalagaDB.SubmitChanges();
         }
 
+        public void deletePub(Guid id)
+        {
+            mtbMalagaDB.tbPublicidad.DeleteOnSubmit(buscarpub(id));
+            salvar();
+        }
+
         // CONVENIOS //
 
         public IList<tbConvenio> ListarConvenios()
@@ -220,6 +226,54 @@ namespace TortolasProject.Models.Repositorios
         public IList<tbContrato> ListarContratos()
         {
             return mtbMalagaDB.tbContrato.ToList();
+        }
+        public tbContrato buscarcontrato(Guid id)
+        {
+            return mtbMalagaDB.tbContrato.Where(contrato => contrato.idContrato == id).Single();
+        }
+        public void updateContrato(tbContrato con)
+        {
+            tbContrato original = buscarcontrato(con.idContrato);
+
+            original.DescripcionLegal = con.DescripcionLegal;
+            original.FechaCaducidad = con.FechaCaducidad;
+            original.FechaCreacion = con.FechaCreacion;
+            original.FKCodigoEmpresa = con.FKCodigoEmpresa;
+            original.FKJuntaDirectiva = con.FKJuntaDirectiva;
+            original.idContrato = con.idContrato;
+            original.NombreEmpresa = con.NombreEmpresa;
+
+            mtbMalagaDB.SubmitChanges();
+        }
+        public void deleteContrato(Guid id)
+        {
+            mtbMalagaDB.tbContrato.DeleteOnSubmit(buscarcontrato(id));
+            salvar();
+        }
+        public void createContrato(tbContrato cont)
+        {
+            mtbMalagaDB.tbContrato.InsertOnSubmit(cont);
+            salvar();
+        }
+
+        //Lista Junta Directiva//
+
+        public IList<tbJuntaDirectiva> ListarJuntaDirectiva()
+        {
+            return mtbMalagaDB.tbJuntaDirectiva.ToList();
+            //.Where(junta => junta.Estado.Equals("Activo"))
+        }
+        public tbSocio buscarsocio(Guid id)
+        {
+            return mtbMalagaDB.tbSocio.Where(socio => socio.idSocio == id).Single();
+        }
+        public tbUsuario buscarusuario(Guid id)
+        {
+            return mtbMalagaDB.tbUsuario.Where(usuario => usuario.idUsuario == id).Single();
+        }
+        public tbCargoDirectivo obtenercargo(Guid id)
+        {
+            return mtbMalagaDB.tbCargoDirectivo.Where(cargo => cargo.idCargoDirectivo == id).Single();
         }
     }
 }

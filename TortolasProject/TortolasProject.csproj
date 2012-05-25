@@ -34,10 +34,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="HiQPdf">
+      <HintPath>..\..\..\..\Downloads\HiQPdf_5.2\HiQPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.2.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Downloads\itextsharp-all-5.2.1\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xtra, Version=5.2.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Downloads\itextsharp-all-5.2.1\itextsharp.xtra.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Rotativa">
+      <HintPath>..\packages\Rotativa.1.2.2\lib\net40\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -52,6 +72,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -61,6 +82,8 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Telerik.Reporting, Version=6.0.12.302, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+    <Reference Include="Telerik.Reporting.Design.VisualStudio, Version=6.0.12.302, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="Telerik.Web.UI, Version=2012.1.301.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -109,8 +132,18 @@
     <Compile Include="Models\Repositorios\Usuarios\UsuariosRepositorio.cs" />
     <Compile Include="Models\tbFactura.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Informes\facturacion.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>facturacion.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\icubeDB.mdf" />
+    <Content Include="App_Data\icubeDB_log.ldf">
+      <DependentUpon>icubeDB.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\Administracion\Monitores\monitores.css" />
     <Content Include="Content\Administracion\Socios\AdminSocios.css" />
     <Content Include="Content\Administracion\Usuarios\Usuarios.css" />
@@ -120,6 +153,10 @@
     <Content Include="Content\Empresas\FormatoTexto.css" />
     <Content Include="Content\Eventos\EventosKendocss.css" />
     <Content Include="Content\Empresas\EmpresasNew.css" />
+    <Content Include="Content\Facturas\facturaPDF.css" />
+    <Content Include="Content\Facturas\graficosContables.css" />
+    <Content Include="Content\Facturas\movimientoPDF.css" />
+    <Content Include="Content\Facturas\visorRuta.css" />
     <Content Include="Content\images\bienvenidosocio.png" />
     <Content Include="Content\images\cvv2.png" />
     <Content Include="Content\images\fondocarnet.png" />
@@ -251,9 +288,12 @@
     <Content Include="Content\images\monitores_titulo.png" />
     <Content Include="Content\images\nosocio.png" />
     <Content Include="Content\images\pago.gif" />
+    <Content Include="Content\images\publicidad.jpg" />
     <Content Include="Content\images\socios\danie.png" />
     <Content Include="Content\images\tituloadminsocios.png" />
     <Content Include="Content\images\titulousuarios.png" />
+    <Content Include="Content\images\tituloventanaeditarsocio.png" />
+    <Content Include="Content\images\tituloventananuevosocio.png" />
     <Content Include="Content\images\user-new.png" />
     <Content Include="Content\images\usuarios\526214_10150894749063804_1689304985_n.jpg" />
     <Content Include="Content\images\usuarios\Abstract_wall.png" />
@@ -319,6 +359,12 @@
     <Content Include="Content\images\tab_r.png" />
     <Content Include="Content\images\tour_hirschaidt011_1300216458.jpg" />
     <Content Include="Content\images\UserGroup.png" />
+    <Content Include="Rotativa\libeay32.dll" />
+    <Content Include="Rotativa\libgcc_s_dw2-1.dll" />
+    <Content Include="Rotativa\mingwm10.dll" />
+    <Content Include="Rotativa\README.txt" />
+    <Content Include="Rotativa\ssleay32.dll" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.af.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.am-ET.min.js" />
@@ -692,7 +738,7 @@
     <Content Include="Scripts\jsactions\Eventos\cursillos.js" />
     <Content Include="Scripts\jsactions\Facturas\graficosContables.js" />
     <Content Include="Scripts\jsactions\Facturas\movimientos.js" />
-    <Content Include="Scripts\jsactions\Facturas\Old\facturasDetalles.js" />
+    <Content Include="Scripts\jsactions\Facturas\generarFacturaPDF.js" />
     <Content Include="Scripts\jsactions\Empresas\Asociaciones\Asociaciones.js" />
     <Content Include="Scripts\jsactions\Empresas\Contratos\Contratos.js" />
     <Content Include="Scripts\jsactions\Empresas\Convenios\Convenios.js" />
@@ -705,6 +751,7 @@
     <Content Include="Scripts\jsactions\Facturas\facturasIndex.js" />
     <Content Include="Scripts\jsactions\Facturas\facturasNav.js" />
     <Content Include="Scripts\jsactions\Facturas\Old\facturasNueva.js" />
+    <Content Include="Scripts\jsactions\Facturas\visorRutas.js" />
     <Content Include="Scripts\jsactions\Pedidos\inventarioIndex.js" />
     <Content Include="Scripts\jsactions\Pedidos\pedidosCerrados.js" />
     <Content Include="Scripts\jsactions\Perfil\Informacion.js" />
@@ -838,6 +885,7 @@
     <Content Include="Scripts\styles\textures\glass.png" />
     <Content Include="Scripts\styles\textures\highlight.png" />
     <Content Include="Views\Administracion\Index.aspx" />
+    <Content Include="Views\Facturas\PDF\facturaPDF.aspx" />
     <Content Include="Views\Facturas\facturasNav.ascx" />
     <Content Include="Views\Facturas\graficosContables.aspx" />
     <Content Include="Views\Cursillos\Index.aspx" />
@@ -858,6 +906,8 @@
     <Content Include="Views\Facturas\Index.aspx" />
     <Content Include="Views\Facturas\leerMovimiento.aspx" />
     <Content Include="Views\Facturas\Movimientos.aspx" />
+    <Content Include="Views\Facturas\PDF\movimientoPDF.aspx" />
+    <Content Include="Views\Facturas\visorRuta.aspx" />
     <Content Include="Views\Home\Captacion.aspx" />
     <Content Include="Views\Articulos\Index.aspx" />
     <Content Include="Views\Monitores\Index.aspx" />
@@ -900,7 +950,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Content\Pedidos\" />
   </ItemGroup>
   <ItemGroup>
@@ -909,6 +958,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Browsers\qt.browser" />
+    <None Include="Content\Rutas\rutaGPX.gpx" />
+    <None Include="Content\Rutas\ruta.kml" />
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
@@ -917,11 +969,18 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\mtbMalaga.dbml.layout">
       <DependentUpon>mtbMalaga.dbml</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Informes\facturacion.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>facturacion.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

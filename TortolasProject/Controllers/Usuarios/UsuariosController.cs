@@ -122,25 +122,37 @@ namespace TortolasProject.Controllers.Usuarios
         }
 
         [HttpPost]
-        public Boolean nuevoSocio(FormCollection data)
+        public void nuevoSocio(FormCollection data)
         {
             Guid idUsuario = Guid.Parse(data["idUsuario"]);
+            DateTime FechaExpiracion = DateTime.Parse(data["Fecha"]);
+            int NumeroSocio = int.Parse(data["NumeroSocio"]);
+            DateTime hoy = DateTime.Today;
+            String Estado = null;
 
-          /*  if (esSocio(idUsuario))
-            {
-                return false;
+            if(FechaExpiracion.CompareTo(hoy)>=0){
+                   Estado ="Activo";
             }
-            else
+            else{
+                   Estado = "Inactivo";
+            }
+
+            if (NumeroSocio.Equals(0))
             {
-             /*   tbSocio socio = new tbSocio{
-                        Estado = "Activo",
-                        FechaAlta = DateTime.Today,
-                        FechaExpiracion = ,                        
-                        NumeroSocio = ,                        
-                        FKUsuario = idUsuario
-                }
-            }*/
-            return false;
+                NumeroSocio = usuariosRepo.ultimoNumeroSocio()+1;
+            }
+
+            tbSocio socio = new tbSocio
+            {
+                idSocio = Guid.NewGuid(),
+                Estado = Estado,
+                FechaAlta = hoy,
+                FechaExpiracion = FechaExpiracion,
+                NumeroSocio = NumeroSocio, 
+                FKUsuario = idUsuario
+            };
+
+            usuariosRepo.crearSocio(socio);
         }
 
         [HttpPost]

@@ -1,2 +1,36 @@
-﻿body {
+﻿#factura 
+{
+    float:right;
+}
+#movimiento
+{
+    position:relative;
+    float:left;
+    margin-top:20px;
+    width:inherit;
+}
+#fechaContainer
+{
+    position:relative;
+    float:left;
+}
+#responsableContainer
+{
+    position:relative;
+    float:right;
+}
+#conceptoContainer
+{
+    position:relative;
+    float:left;
+}
+#descripcionContainer
+{
+    position:relative;
+    float:left;
+}
+#totalContainer
+{
+    position:relative;
+    float:right;
 }

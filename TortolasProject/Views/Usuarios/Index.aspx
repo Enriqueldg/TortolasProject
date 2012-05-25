@@ -97,7 +97,15 @@
                                 <img src="../../Content/images/exclamacion.png" width="100"/><h2>¡Este Usuario no es Socio!</h2><br /><br />
                                 Puede crear un nuevo Socio y enlazar esa ficha de Socio a este usuario. Para hacerlo pulse el boton de abajo
                                 y rellene los campos oportunos.<br /><br />
+                                Si quiere asignarle un numero de Socio en concreto, marque la opcion.<br>
 
+                                <input type="checkbox" class="k-input checkNumeroSocio"><label>  Especificar numero de Socio</label><br>
+                                <div class="especificarNumeroSocio" hidden="hidden">
+                                    <label><b>Numero de Socio :</b></label><input type="text" class="k-textbox numeroSocio" placeholder="Numero de Socio">
+                                    <br />
+                                </div>
+                                <label><b>Fecha de Expiracion :</b></label>
+                                <input type="text" class="fechaExpiracionPicker" placeholder="Fecha de Expiracion" ><br><br>
                                 <input type="button" class="k-button botonCrearEnlazarSocio" value="Crear Socio y enlazar">
                                 </center>
                             </div>
@@ -109,7 +117,7 @@
                                                 <div class="carnetFechaAlta">Fecha de Alta :</div>
                                                 <div class="carnetNombre">Nombre :</div>
                                                 <div class="carnetApellidos">Apellidos : </div>
-                                                <div class="carnetDNI">DNI : </div>
+                                                <div class="carnetDNI">DNI : </div>                                                
                                             </div>
                                     </div>
                             </div>

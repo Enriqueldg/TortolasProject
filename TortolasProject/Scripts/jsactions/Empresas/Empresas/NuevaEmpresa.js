@@ -1,6 +1,34 @@
 ﻿$(document).ready(function () {
+
+    //VALIDACION//
+    /*
+    $(".requerido").change(function () { //Actualizacion campos requeridos
+        if ($(this).val() == "") {
+            $(this).addClass("k-invalid");
+        }
+        else {
+            $(this).removeClass("k-invalid");
+        }
+    });
+
+    function comprobarNecesarios(formulario) { //Comprueba nulos
+        var noHayErrores = true;
+        $("." + formulario + " .requerido").each(function (Index) {
+            if ($(this).val() == "") {
+                $(this).addClass("k-invalid");
+                noHayErrores = false;
+            }
+        });
+        return noHayErrores;
+    }
+
     $("#BotonConfirmarNuevaEmpresa").live("click", function () {
         var datos = {};
+
+        if (comprobarNecesarios("NuevaEmpresaDatosEmpresa")) {
+            datos = {};
+            alert("detrodelif");
+        }
 
         //Coger datos
         datos["nombreempresa"] = $("#newnombreempresa").val();
@@ -47,4 +75,5 @@
             $("#NuevaEmpresaFormulario2").hide();
         });
     });
+    */
 });

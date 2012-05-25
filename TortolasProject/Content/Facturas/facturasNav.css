@@ -1,4 +1,15 @@
-﻿#FacturasNav 
+﻿#facturaContainer
+{
+    position:relative;
+    float:left;
+    width:inherit;
+    background-color:White;
+    border: 1px solid Orange;
+    padding:5px;
+    border-radius:5px;
+    
+}
+#FacturasNav 
 {
     position:relative;
     float:left;
@@ -75,5 +86,13 @@
 #volverFacturasNav ul li:hover
 {
     border-bottom:3px solid gray;   
+}
+.empty-grid
+{
+    color: black;
+    background: #eee;
+    height: 100%;
+    text-align: center;
+    line-height: 100px;
 }
 

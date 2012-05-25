@@ -1,6 +1,7 @@
 ﻿var dataSource;
 var tabla;
 var w;
+var filtrosVentana;
 var estado; // { Nuevo, editar, detalles}
 $(document).ready(function () {
 
@@ -20,11 +21,13 @@ $(document).ready(function () {
                     id: "idMovimiento",
                     fields:
                     {
-                        Concepto: { editable: true },
-                        Fecha: { editable: true },
-                        Total: { editable: true, type: "number" },
-                        ResponsableName: { editable: false },
-                        Descripcion: { editable: true }
+                        Concepto: { editable: true, filterable: true },
+                        Fecha: { editable: true, filterable: true },
+                        Total: { editable: true, type: "number", filterable: true },
+                        ResponsableName: { editable: false, filterable: true },
+                        Descripcion: { editable: true, filterable: false },
+                        NumMovimiento: { filterable: false },
+                        Saldo: { filterable: false }
                     }
                 }
             }
@@ -33,16 +36,19 @@ $(document).ready(function () {
     // Tabla de facturas
     tabla = $("#MovimientosGrid").kendoGrid({
         dataSource: dataSource,
-        filterable: true,
-        sortable: true,
         pageable: true,
         toolbar: [
                     { text: "Nuevo movimiento", className: "nuevoMovimiento" },
                     { text: "Ingresos", className: "ingresosButton" },
                     { text: "Gastos", className: "gastosButton" },
+                    { text: "Más filtros", className: "filtrosVentanaButton" },
                     { text: "Quitar filtros", className: "limpiarButton" }
                 ],
         columns: [
+            {
+                field: "NumMovimiento",
+                title: "Núm. Movimiento"
+            },
             {
                 field: "Fecha",
                 title: "Fecha"
@@ -58,6 +64,10 @@ $(document).ready(function () {
             {
                 field: "Total",
                 title: "Importe"
+            },
+            {
+                field: "Saldo",
+                title: "Saldo"
             }
         ]
     }).data("kendoGrid");
@@ -69,8 +79,15 @@ $(document).ready(function () {
         visible: false,
         modal: true
     });
-
     w = $("#MovimientosVentana").data("kendoWindow");
+
+    $("#FiltrosVentana").kendoWindow({
+        title: "Filtros",
+        width: "600px",
+        visible: false,
+        modal: true
+    });
+    filtrosVentana = $("#FiltrosVentana").data("kendoWindow");
 
     $("#fechaMovimiento").kendoDatePicker({
         start: "day",
@@ -81,32 +98,30 @@ $(document).ready(function () {
         format: "c",
         decimals: 3
     });
-
     $(".nuevoMovimiento").click(function () {
         w.center();
         w.open();
     });
-
     $(".ingresosButton").click(function () {
-        dataSource.filter({field: "Total", operator: "gte", value: 0});
+        dataSource.filter({ field: "Total", operator: "gte", value: 0 });
     });
-
     $(".gastosButton").click(function () {
         dataSource.filter({
-            field: "Total", operator: "lt", value: 0 
+            field: "Total", operator: "lt", value: 0
         });
     });
-
+    $(".filtrosVentanaButton").click(function () {
+        filtrosVentana.center();
+        filtrosVentana.open();
+    });
     $(".limpiarButton").click(function () {
         dataSource.filter({});
     });
-
     $("#MovimientosGrid").delegate(".editarMovimientoButton", "click", function (e) {
         e.preventDefault();
         var movimiento = tabla.dataItem($(this).closest("tr"));
 
     });
-
     $("#guardarMovimiento").click(function () {
         var fecha = $("#fechaMovimiento").val();
         var concepto = $("#conceptoMovimiento").val();
@@ -127,43 +142,10 @@ $(document).ready(function () {
         });
 
     });
-
     $("#descartarMovimiento").click(function () {
         limpiarCampos();
         w.close();
     });
-
-    /*
-    $("#MovimientosGrid").delegate(".eliminarMovimientoButton", "click", function (e) {
-        e.preventDefault();
-
-        var movimiento = tabla.dataItem($(this).closest("tr"));
-        var r = confirm("¿Está seguro de eliminar el movimiento? \n \n Concepto: " + movimiento.Concepto + "\n \n Importe: " + movimiento.Total);
-        if (r == true) {
-            var urlDelete = "../Facturas/eliminarMovimiento";
-            var datos = {
-                idMovimiento: movimiento.idMovimiento,
-                tipo: movimiento.Tipo
-            };
-
-            $.post(urlDelete, datos, function (data) {
-                dataSource.remove(movimiento);
-
-                tabla.refresh();
-            });
-        }
-    });
-    
-
-    $("#MovimientosGrid").delegate(".leerMovimientoButton", "click", function (e) {
-        e.preventDefault();
-
-        var movimiento = tabla.dataItem($(this).closest("tr"));
-
-        // Llamamos a la función para ver los detalles de la factura
-        leerMovimiento(movimiento.idMovimiento);
-    });
-    */
     $(".k-grid-content tr").live("click", function () {
         // Obtenemos la UID de la fila creada por KENDO
         var uid = $(this).attr("data-uid");
@@ -174,6 +156,47 @@ $(document).ready(function () {
         // Llamamos a la función para ver los detalles de la factura
         leerMovimiento(fila.idMovimiento);
     });
+
+    $("#fechaInicial").kendoDatePicker({
+        start: "day",
+        depth: "year",
+        format: "dd/MM/yyyy"
+    });
+    $("#fechaFinal").kendoDatePicker({
+        start: "day",
+        depth: "year",
+        format: "dd/MM/yyyy"
+    });
+    $("#filtrarButton").click(function () {
+        var fechaInicial = $("#fechaInicial").val();
+        var fechaFinal = $("#fechaFinal").val();
+        var concepto = $("#concepto").val();
+        var responsable = $("#responsable").val();
+        if (fechaInicial != "" && fechaFinal != "") {
+            if (Date.parse(fechaInicial) < Date.parse(fechaFinal)) {
+                dataSource.filter([
+                    { field: "Fecha", operator: "gte", value: fechaInicial },
+                    { field: "Fecha", operator: "lte", value: fechaFinal }
+                ]);
+            }
+        }
+        if (responsable != null) {
+            dataSource.filter([
+                { field: "ResponsableName", operator: "contains", value: responsable }
+            ]);
+        }
+        if (concepto != null) {
+            dataSource.filter([
+                { field: "Concepto", operator: "contains", value: concepto }
+            ]);
+        }
+
+
+
+        filtrosVentana.close();
+        tabla.refresh();
+    });
+
 });
 
 function leerMovimiento(idMovimiento) {
