@@ -29,6 +29,15 @@ namespace TortolasProject.Models.Repositorios
             return mtbMalagaDB.tbFactura.Where(factura => factura.idFactura == id && factura.Eliminado == false).Single();            
         }
 
+        public tbFactura leerFacturaByPedidoUsuario(Guid idPedidoUsuario)
+        {
+            return mtbMalagaDB.tbFactura.Where(f => f.FKPedidoUsuario.Equals(idPedidoUsuario)).Single();
+        }
+        public tbFactura leerFacturaByPedidoGlobal(Guid idPedidoGlobal)
+        {
+            return mtbMalagaDB.tbFactura.Where(f => f.FKPedidoGlobal.Equals(idPedidoGlobal)).SingleOrDefault();
+        }
+
         public void nuevaFactura(tbFactura f)
         {
             f.NumFactura = nuevoNumFactura();

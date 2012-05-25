@@ -15,11 +15,13 @@ namespace TortolasProject.Controllers
         static InventarioRepositorio InventarioRepo = new InventarioRepositorio();
         static ArticulosRepositorio ArticulosRepo = new ArticulosRepositorio();
 
+        [Authorize(Roles="Junta Directiva")]
         public ActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult leerCategorias()
         {
             var categorias = from cat in ArticulosRepo.listarCategorias()
@@ -32,6 +34,7 @@ namespace TortolasProject.Controllers
             return Json(categorias);
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult leerTodos()
         {
             var articulos = from inv in InventarioRepo.listarInventario()
@@ -51,6 +54,7 @@ namespace TortolasProject.Controllers
             return Json(articulos);
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public int anadirInventario(FormCollection Data)
         {
             String Ubicacion = Data ["Ubicacion"];
@@ -67,6 +71,7 @@ namespace TortolasProject.Controllers
             return 1;
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public int eliminarInventario(FormCollection Data)
         {
             Guid idInventario = Guid.Parse(Data["idInventario"]);
@@ -75,6 +80,7 @@ namespace TortolasProject.Controllers
             return 1; //mirar control de errores
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult cargarVistaAnadirInventario()
         {
             return PartialView("AnadirInventario");

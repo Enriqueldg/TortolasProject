@@ -475,6 +475,7 @@
     <Content Include="Content\master.css" />
     <Content Include="Content\nav.css" />
     <Content Include="Content\newCascadeStyleSheet.css" />
+    <Content Include="Content\Pedidos\formatoArticulos.css" />
     <Content Include="Content\Perfil\Perfil.css" />
     <Content Include="Content\images\proveedores.jpg" />
     <Content Include="Content\Rutas\Rutas.css" />
@@ -1128,10 +1129,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Content\Pedidos\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
@@ -1160,8 +1158,8 @@
     </None>
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

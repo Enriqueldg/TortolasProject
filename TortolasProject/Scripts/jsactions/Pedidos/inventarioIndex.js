@@ -20,6 +20,16 @@
     //**************************************VISTA AÑADIR INVENTARIO*****************************************
     //Guardar añadir articulos
     $("#anadirInventarioAceptarButton").live('click', function () {
+
+        $(".necesario").change(function () {
+            if ($(this).val() == "") {
+                $(this).addClass("k-invalid");
+            }
+            else {
+                $(this).removeClass("k-invalid");
+            }
+        });
+
         $("#Ubicacion").val("");
         $("#Cantidad").val("");
         var w = $("#anadirInventarioVentana").data("kendoWindow");
@@ -99,6 +109,9 @@
     });
 
     $("#anadirInventarioVentanaAceptar").live('click', function () {
+
+        if (comprobarNecesarios("anadirInventarioVentana")) {
+
         var grid = $("#anadirInventarioGrid").data("kendoGrid");
         var uid = $("#anadirInventarioGrid .k-state-selected").attr("data-uid");
         var fila = grid.dataSource.getByUid(uid);
@@ -116,6 +129,11 @@
             var w = $("#anadirInventarioVentana").data("kendoWindow");
             w.close();
         });
+    }
+    else {
+        alert("Revisar campos");
+    }
+
     });
 
     //**********************************************INDEX**************************************************
@@ -190,3 +208,14 @@
     $("#anadirInventarioAceptarButton").hide();
     $("#anadirInventarioCancelarButton").hide();
 });
+
+function comprobarNecesarios(formulario) {
+    var noHayErrores = true;
+    $("#" + formulario + " .necesario").each(function (index) {
+        if ($(this).val() == "") {
+            $(this).addClass("k-invalid");
+            noHayErrores = false;
+        }
+    });
+    return noHayErrores;
+}

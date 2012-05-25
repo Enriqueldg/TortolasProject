@@ -8,15 +8,18 @@ using TortolasProject.Models.Repositorios;
 
 namespace TortolasProject.Controllers
 {
+     
     public class ArticulosController : Controller
     {
         static ArticulosRepositorio ArticulosRepo = new ArticulosRepositorio();
 
+        [Authorize(Roles="Junta Directiva")]
         public ActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult leerCategorias()
         {
             var categorias = from cat in ArticulosRepo.listarCategorias()
@@ -29,6 +32,7 @@ namespace TortolasProject.Controllers
             return Json(categorias);
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult leerTodos()
         {
 
@@ -47,18 +51,20 @@ namespace TortolasProject.Controllers
             return Json(articulos);
         }
 
-        
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult cargarVistaAnadirArticulo()
         {
             return PartialView("AnadirArticulo");
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public ActionResult cargarVistaEditarArticulo()
         {
             return PartialView("EditarArticulo");
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public int nuevoArticulo(FormCollection Data)
         {
             String nombre = Data ["nombre"];
@@ -80,6 +86,8 @@ namespace TortolasProject.Controllers
             ArticulosRepo.anadirArticulo(f);
             return 1; //mirar control de errores
         }
+
+        [Authorize(Roles = "Junta Directiva")]
         public int editarArticulo(FormCollection Data)
         {
             String nombre = Data["nombre"];
@@ -100,6 +108,8 @@ namespace TortolasProject.Controllers
             ArticulosRepo.editarArticulo(f, idArticulo);
             return 1; //mirar control de errores
         }
+
+        [Authorize(Roles = "Junta Directiva")]
         public int eliminarArticulo(FormCollection Data)
         {
             Guid idArticulo = Guid.Parse(Data["idarticulo"]);

@@ -6,8 +6,11 @@
 
 <asp:Content ID="PedidosIndexMain" ContentPlaceHolderID="MainContent" runat="server">
 
-<div id="cerrarPedidoButton"><input type="button" class="k-button" value="Cerrar pedido" /></div>
-<div id="anadirPedidoButton"><input type="button" class="k-button" value="Añadir pedido" /></div>
+<% if (User.Identity.IsAuthenticated && User.IsInRole("Junta Directiva"))
+   { %>
+        <div id="cerrarPedidoButton"><input type="button" class="k-button" value="Cerrar pedido" /></div>
+        <div id="anadirPedidoButton"><input type="button" class="k-button" value="Añadir pedido" /></div>
+<% } %>
 <div id="pedidosGrid"></div>
 
 <script type="text/x-kendo-template" id="templateDetailPedidos">
@@ -57,17 +60,19 @@
 
 </script>
 
+<% if (User.Identity.IsAuthenticated && User.IsInRole("Junta Directiva")) { %>
 <div id="anadirPedidoVentana"> 
-    Nombre <input type="text" id="nombre"/> <br /> 
-    Descuento <input type="text" id="descuento"/> <br />
-    Fecha límite de inscripción<input id="fechaPedido" />
-    Fecha límite de pago<input id="fechaPedidoPago" />
+    Nombre <input type="text" class="k-textbox necesario" id="nombre"/> <br/>
+    Descuento <input type="text" class="k-textbox necesario" id="descuento"/> <br/>
+    Fecha límite de inscripción <input type="text" class="k-textbox necesario" id="fechaPedido"/> <br/>
+    Fecha límite de pago <input type="text" class="k-textbox necesario" id="fechaPedidoPago"/> <br/>
     <div id="articulosGridDisponibles"></div>
     <div id="articulosGridAnadirPedido"></div>
     <div id="anadirPedidoVentanaAgregarButton"><input type="button" class="k-button" value="Agregar" /></div>
     <div id="anadirPedidoVentanaAceptar"><input type="button" class="k-button" value="Aceptar" /></div>
     <div id="anadirPedidoVentanaCancelar"><input type="button" class="k-button" value="Cancelar" /></div>
  </div>
+ <% } %>
 
  <div id="inscripcionPedidoVentana"> 
     Selecciona los articulos
@@ -81,6 +86,7 @@
 </asp:Content>
 
 <asp:Content ID="PedidosIndexCss" ContentPlaceHolderID="CssContent" runat="server">
+<link href="../../Content/Pedidos/formatoArticulos.css" rel="stylesheet" type="text/css" />
 </asp:Content>
 
 <asp:Content ID="PedidosIndexScript" ContentPlaceHolderID="ScriptContent" runat="server">

@@ -3,7 +3,7 @@
     var idArticulo = null;
 
     //***********************************VISTA AÑADIR ARTICULO******************************************
-
+    
     //Cargar vista Index de articulos al cancelar
     $("#anadirArticuloCancelarButton").live('click', function () {
         volverIndexArticulos();
@@ -11,25 +11,32 @@
 
     //Guardar articulo en la BD y volver al index de articulos
     $("#anadirArticuloAceptarButton").live('click', function () {
-        var nombre = $("#nombreAnadirArticuloAutocomplete").val();
-        var imagen = $("#imagenAnadirArticuloAutocomplete").val();
-        var descripcion = $("#descripcionAnadirArticuloAutocomplete").val();
-        var precio = $("#precioAnadirArticuloAutocomplete").val();
-        var ddl = $("#dropDownList").data("kendoDropDownList");
-        var categoria = ddl.value();
-        data = {
-            nombre: nombre,
-            imagen: imagen,
-            descripcion: descripcion,
-            precio: precio,
-            categoria: categoria
-        };
+        if (comprobarNecesarios("anadirArticuloForm")) {
 
-        url = 'Articulos/nuevoArticulo';
-        $.post(url, data, function (data) {
-            $("#articulosGrid").data("kendoGrid").dataSource.read();
-            volverIndexArticulos();
-        });
+            var nombre = $("#nombreAnadirArticuloAutocomplete").val();
+            var imagen = $("#imagenAnadirArticuloAutocomplete").val();
+            var descripcion = $("#descripcionAnadirArticuloAutocomplete").val();
+            var precio = $("#precioAnadirArticuloAutocomplete").val();
+            var ddl = $("#dropDownList").data("kendoDropDownList");
+            var categoria = ddl.value();
+            data = {
+                nombre: nombre,
+                imagen: imagen,
+                descripcion: descripcion,
+                precio: precio,
+                categoria: categoria
+            };
+
+            url = 'Articulos/nuevoArticulo';
+            $.post(url, data, function (data) {
+                $("#articulosGrid").data("kendoGrid").dataSource.read();
+                volverIndexArticulos();
+            });
+
+        }
+        else {
+            alert("Revisar campos");
+        }
     });
 
 
@@ -49,22 +56,30 @@
 
     //Guardar edicion en la BD y volver al index de articulos
     $("#editarArticuloAceptarButton").live('click', function () {
-        var nombre = $("#nombreEditarArticuloAutocomplete").val();
-        var imagen = $("#imagenEditarArticuloAutocomplete").val();
-        var descripcion = $("#descripcionEditarArticuloAutocomplete").val();
-        var precio = $("#precioEditarArticuloAutocomplete").val();
-        data = {
-            nombre: nombre,
-            imagen: imagen,
-            descripcion: descripcion,
-            precio: precio,
-            idarticulo: idArticulo
-        };
-        url = 'Articulos/editarArticulo';
-        $.post(url, data, function (data) {
-            $("#articulosGrid").data("kendoGrid").dataSource.read();
-            volverIndexArticulos2();
-        });
+        
+        if (comprobarNecesarios("editarArticuloForm")) {
+
+            var nombre = $("#nombreEditarArticuloAutocomplete").val();
+            var imagen = $("#imagenEditarArticuloAutocomplete").val();
+            var descripcion = $("#descripcionEditarArticuloAutocomplete").val();
+            var precio = $("#precioEditarArticuloAutocomplete").val();
+            data = {
+                nombre: nombre,
+                imagen: imagen,
+                descripcion: descripcion,
+                precio: precio,
+                idarticulo: idArticulo
+            };
+            url = 'Articulos/editarArticulo';
+            $.post(url, data, function (data) {
+                $("#articulosGrid").data("kendoGrid").dataSource.read();
+                volverIndexArticulos2();
+            });
+
+        }
+        else {
+            alert("Revisar campos");
+        }
     });
 
     //Cargar vista Index de articulos al cancelar
@@ -88,6 +103,16 @@
             $("#anadirArticuloDiv").html(data);
             $("#anadirArticuloDiv").show();
             $("#anadirArticuloButton").hide();
+
+
+            $(".necesario").change(function () {
+                if ($(this).val() == "") {
+                    $(this).addClass("k-invalid");
+                }
+                else {
+                    $(this).removeClass("k-invalid");
+                }
+            });
 
             //numeric texbox
             $("#precioAnadirArticuloAutocomplete").kendoNumericTextBox({
@@ -118,7 +143,17 @@
     });
 
     //Cargar vista Editar articulo
-    $(".botonEditarFila").live('click', function () {
+   $(".botonEditarFila").live('click', function () {
+
+       $(".necesario").change(function () {
+           if ($(this).val() == "") {
+               $(this).addClass("k-invalid");
+           }
+           else {
+               $(this).removeClass("k-invalid");
+           }
+       });
+
         var fila = $("#articulosGrid").find("tbody tr.k-state-selected");
         var filajson = $("#articulosGrid").data("kendoGrid").dataItem(fila).toJSON();
         var dataSourceArticulosGrid = $("#articulosGrid").data("kendoGrid").dataSource;
@@ -205,5 +240,17 @@
                 }
         }
     });
-
 });
+
+
+       function comprobarNecesarios(formulario) {
+           var noHayErrores = true;
+           $("#" + formulario + " .necesario").each(function (index) {
+               if ($(this).val() == "") {
+                   $(this).addClass("k-invalid");
+                   noHayErrores = false;
+               }
+           });
+           return noHayErrores;
+       }
+

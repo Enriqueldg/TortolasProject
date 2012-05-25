@@ -5,7 +5,8 @@
 </asp:Content>
 
 <asp:Content ID="PedidosCerradosMain" ContentPlaceHolderID="MainContent" runat="server">
-
+<% if (User.Identity.IsAuthenticated && User.IsInRole("Junta Directiva"))
+   { %>
 <div id="facturarPedidoButton"><input type="button" class="k-button" value="Facturar pedido" /></div>
 <div id="PedidosCerradosGrid"></div>
 
@@ -55,6 +56,8 @@
     </div> 
 
 </script>
+
+<% } %>
 
 </asp:Content>
 

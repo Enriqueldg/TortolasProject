@@ -267,6 +267,8 @@ $(document).ready(function () {
 
     $("#anadirPedidoVentanaAceptar").live('click', function () {
 
+        if (comprobarNecesarios("anadirPedidoVentana")) {
+
         var nom = $("#nombre").val();
         var desc = $("#descuento").val();
         var date = $("#fechaPedido").val();
@@ -295,6 +297,11 @@ $(document).ready(function () {
             var tabla = $("#pedidosGrid").data("kendoGrid");
             tabla.refresh();
         });
+
+        }
+        else {
+            alert("Revisar campos");
+        }
     });
     //***********************************************INDEX************************************************
     $("#cerrarPedidoButton").click(function () {
@@ -313,6 +320,16 @@ $(document).ready(function () {
     });
     
     $("#anadirPedidoButton").click(function () {
+
+        $(".necesario").change(function () {
+            if ($(this).val() == "") {
+                $(this).addClass("k-invalid");
+            }
+            else {
+                $(this).removeClass("k-invalid");
+            }
+        });
+
         $("#nombre").val("");
         $("#descuento").val("");
         var w = $("#anadirPedidoVentana").data("kendoWindow");
@@ -573,3 +590,14 @@ $(document).ready(function () {
            });
 
        }
+
+    function comprobarNecesarios(formulario) {
+    var noHayErrores = true;
+    $("#" + formulario + " .necesario").each(function (index) {
+        if ($(this).val() == "") {
+            $(this).addClass("k-invalid");
+            noHayErrores = false;
+        }
+    });
+    return noHayErrores;
+}

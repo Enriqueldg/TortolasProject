@@ -16,16 +16,20 @@ namespace TortolasProject.Controllers
         static FacturasRepositorio FacturasRepo = new FacturasRepositorio();
         mtbMalagaDataContext db = new mtbMalagaDataContext();
 
+        [Authorize]
         public ActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles="Junta Directiva")]
         public ActionResult PedidosCerrados()
         {
             return View();
         }
         //*********************RELACION PEDIDO GLOBAL - ARTICULO*****************
+
+
         [HttpPost]
         public ActionResult getArticulosByPedido(FormCollection data)
         {
@@ -96,6 +100,7 @@ namespace TortolasProject.Controllers
             return Json(pedidos);
         }
 
+        [Authorize(Roles="Junta Directiva")]
         public int cerrarPedido(FormCollection data)
         {
             Guid idPedidoGlobal = Guid.Parse(data["idPedidoGlobal"]);
@@ -105,6 +110,7 @@ namespace TortolasProject.Controllers
             return 1;
         }
 
+        [Authorize(Roles = "Junta Directiva")]
         public int anadirPedido(FormCollection Data)
         {
             String nombre = Data["Nombre"];
@@ -113,6 +119,7 @@ namespace TortolasProject.Controllers
             DateTime dateP = DateTime.Parse(Data["FechaPago"]);
             var articulosRaw = System.Web.Helpers.Json.Decode(Data["Articulos"]);
             Guid idPedidoGlobal = Guid.NewGuid();
+            Guid FKEstado = Guid.Parse("52af42b2-c005-4650-a351-a8336c70e47c");
             tbPedidoGlobal f = new tbPedidoGlobal()
             {
                 Nombre = nombre,
@@ -120,7 +127,8 @@ namespace TortolasProject.Controllers
                 idPedidoGlobal = idPedidoGlobal,
                 Total = 0,
                 FechaLimite = date,
-                FechaLimitePago = dateP
+                FechaLimitePago = dateP,
+                FKEstadoPedido = FKEstado
             };
 
             PedidosRepo.anadirPedidoGlobal(f);
@@ -214,6 +222,47 @@ namespace TortolasProject.Controllers
         }
 
         //*******************************PEDIDOS CERRADOS******************************
+        public void facturarPedidoGlobal(FormCollection data)
+        {
+            Guid id = Guid.Parse(data["idPedidoGlobal"]);
+            tbPedidoGlobal pedidoGlobal = PedidosRepo.getPedidoGlobalById(id);
+            if (FacturasRepo.leerFacturaByPedidoGlobal(pedidoGlobal.idPedidoGlobal) != null)
+            {
+
+                IList<tbPedidoUsuario> pedidosUsuario = PedidosRepo.getPedidoUsuarioByPedido(id);
+                Guid idFactura = Guid.NewGuid();
+                tbFactura f = new tbFactura
+                {
+                    idFactura = idFactura,
+                    Concepto = "Pedido global: " + pedidoGlobal.Nombre,
+                    Fecha = DateTime.Today,
+                    FKJuntaDirectiva = obtenerJuntaDirectivaLogueado(),
+                    FKPedidoGlobal = pedidoGlobal.idPedidoGlobal,
+                    FKEstado = FacturasRepo.leerEstadoByNombre("Pagado").idEstadoFactura
+                };
+                Decimal total = 0;
+                IList<tbLineaFactura> lineasFactura = new List<tbLineaFactura>();
+                foreach (tbPedidoUsuario pedidoUsuario in pedidosUsuario)
+                {
+                    tbFactura facturaUsuario = FacturasRepo.leerFacturaByPedidoUsuario(pedidoUsuario.idPedidoUsuario);
+                    if (FacturasRepo.leerEstadoByNombre("Pagado").idEstadoFactura.Equals(facturaUsuario.FKEstado))
+                    {
+                        tbLineaFactura linea = new tbLineaFactura
+                        {
+                            idLineaFactura = Guid.NewGuid(),
+                            Descripcion = "Usuario: " + UsuariosRepo.obtenerUsuario(pedidoUsuario.FKUsuario),
+                            Unidades = 1,
+                            PrecioUnitario = facturaUsuario.BaseImponible,
+                            Total = facturaUsuario.BaseImponible
+                        };
+                        lineasFactura.Add(linea);
+                        total = total + facturaUsuario.BaseImponible;
+                    }
+                }
+                f.BaseImponible = total;
+                FacturasController.crearFacturaExterna(f, lineasFactura);
+            }
+        }
         public void facturarPedidoUsuario(FormCollection data)
         {
             Guid id = Guid.Parse(data["idPedidoUsuario"]);
@@ -246,25 +295,26 @@ namespace TortolasProject.Controllers
                     Unidades = linea.Unidades,
                     PrecioUnitario = ArticulosRepo.leerArticulo(linea.FKArticulo).Precio.Value,
                     Total = unidades * precio,
-                    FKArticulo = linea.FKArticulo
+                    FKArticulo = linea.FKArticulo,
+                    FKFactura = idFactura
                 };
                 lineasFactura.Add(lineaFactura);
                 total = total + (unidades*precio);
             }
 
-            if (!UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).Equals(default))
+            if (!UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).Equals(default(tbUsuario) ))
             {
                 tbSocio socio = UsuariosRepo.obtenerSocio(UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).idUsuario);
-                foreach(tbDescuentoSocio ds in UsuariosRepo.obtenerDescuentoSocio())
+                foreach(tbDescuentoSocio ds in UsuariosRepo.listarDescuentoSocios())
                 {
                     if(ds.Nombre.Equals("Basico")) 
                     {
                         tbLineaFactura linea = new tbLineaFactura
                         {
-                            idLineaFactura =Guid.NewGuid(),
-                            Concepto = "Descuento: "+ds.Nombre,
-                            Unidades = -ds.Cantidad,
-                            PrecioUnitario = total,
+                            idLineaFactura = Guid.NewGuid(),
+                            Descripcion = "Descuento: "+ds.Nombre,
+                            Unidades = total,
+                            PrecioUnitario = -(ds.Cantidad/(decimal)100),
                             Total = (-ds.Cantidad) * total,
                             FKFactura = idFactura
                         };
@@ -272,14 +322,14 @@ namespace TortolasProject.Controllers
                     }
                     if(ds.Nombre.Equals("Antiguedad"))
                     {
-                        if((socio.FechaAlta - socio.FechaBaja).TotalSeconds > new DateTime(2012,1,1) - new DateTime(2012 - ds.Annos,1,1))
+                        if((socio.FechaAlta - socio.FechaBaja.Value).TotalSeconds > (new DateTime(2012,1,1) - new DateTime((2012 - ds.Annos.Value),1,1)).TotalSeconds)
                         {
                             tbLineaFactura linea = new tbLineaFactura
                             {
                                 idLineaFactura =Guid.NewGuid(),
-                                Concepto = "Descuento: "+ds.Nombre,
-                                Unidades = -ds.Cantidad,
-                                PrecioUnitario = total,
+                                Descripcion = "Descuento: "+ds.Nombre,
+                                Unidades = total,
+                                PrecioUnitario = -(ds.Cantidad / (decimal)100),
                                 Total = (-ds.Cantidad) * total,
                                 FKFactura = idFactura
                             };

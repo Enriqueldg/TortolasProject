@@ -2,27 +2,29 @@
 <div id="anadirArticuloForm">
 
     <div id="nombreText">
-    Nombre  <input id='nombreAnadirArticuloAutocomplete' />
+    Nombre <input type="text" class="k-textbox necesario" id="nombreAnadirArticuloAutocomplete"/> 
     </div>
 
     <div id="imagenText">
-    Imagen  <input id='imagenAnadirArticuloAutocomplete' />
+    Imagen <input type="text" class="k-textbox necesario" id="imagenAnadirArticuloAutocomplete"/> 
     </div>
 
     <div id="descripcionText">
-    Descripción  <input id='descripcionAnadirArticuloAutocomplete' />
+    Descripción <input type="text" class="k-textbox necesario" id="descripcionAnadirArticuloAutocomplete"/>
     </div>
 
     <div id="precioText">
-    Precio  <input type='text' id='precioAnadirArticuloAutocomplete' />
+    Precio <input type="text" class="k-textbox necesario" id="precioAnadirArticuloAutocomplete"/>
+            
     </div>
 
     <div id="categoriaDrop">
     Categoria <input id="dropDownList" />
     </div>
 
+    </div>
 <div id="anadirArticuloAceptarButton"><input type="button" class="k-button" value="Aceptar" /></div>
 
-</div>
+
 <div id="anadirArticuloCancelarButton"><input type="button" class="k-button" value="Cancelar" /></div>
 

@@ -10,6 +10,24 @@ var gridPedidos;
 
 $(document).ready(function () {
 
+    $("#facturarPedidoButton").click(function () {
+        var uid = $("#PedidosCerradosGrid .k-state-selected").attr("data-uid");
+        var fila = gridPedidos.dataSource.getByUid(uid);
+        console.log(fila);
+        id = fila.idPedido;
+        alert(id);
+        data = {
+            idPedidoGlobal: id
+        }
+        alert("cucu2");
+
+        url = 'facturarPedidoGlobal';
+
+        $.post(url, data, function (data) {
+
+        });
+    });
+
     $(".botonEstablecerPagado").live('click', function () {
         var fila = $(".lineasPedido").find("tbody tr.k-state-selected");
         var filajson = $(".lineasPedido").data("kendoGrid").dataItem(fila).toJSON();
