@@ -19,11 +19,7 @@
         <li>
             <img src="../../Content/iconos/Mail-48.png" height="40"/>
             Mensajes
-        </li>
-        <li>
-            <img src="../../Content/iconos/Keynote-On.png" height="40"/>
-            Estadisticas
-        </li>
+        </li>        
         <li>
             <img src="../../Content/iconos/map_icon.png" height="40"/>
             Rutas
@@ -128,27 +124,28 @@
                      <hr />
                      <br /><br />
 
-                     <div id="totalAlta" class="cuadroCuentas">
-                        <label for="importeAlta"><b>Importe :</b></label><div id="importeAlta"></div><br />
-                        <label for="IVAAlta"><b>IVA :</b></label><div id="IVAAlta"></div><br />
-                        <label for="importeTotalAlta"><b>Importe Total :</b></label><div id="importeTotalAlta"></div><br />                         
-                    </div>
+                     <div id="alta">
+                         <div id="totalAlta" class="cuadroCuentas">
+                            <label for="importeAlta"><b>Importe :</b></label><div id="importeAlta"></div><br />
+                            <label for="IVAAlta"><b>IVA :</b></label><div id="IVAAlta"></div><br />
+                            <label for="importeTotalAlta"><b>Importe Total :</b></label><div id="importeTotalAlta"></div><br />                         
+                        </div>
 
-                     <div id="textoAlta">
-                     Debido a que o nunca ha sido parte de MTB o ha sido de baja debe abonar la cuota de Alta. A continuacion podra ver los detalles.<br /><br />
-                     <table id="tarifasAlta" border="0" width="50%" >                        
-                        <thead>
+                         <div id="textoAlta">
+                         Debido a que o nunca ha sido parte de MTB o ha sido de baja debe abonar la cuota de Alta. A continuacion podra ver los detalles.<br /><br />
+                         <table id="tarifasAlta" border="0" width="50%" >                        
+                            <thead>
+                                <tr align="center">
+                                    <th>Tarifa de Alta de Socio</th>                               
+                                </tr>
+                            </thead>
                             <tr align="center">
-                                <th>Tarifa de Alta de Socio</th>                               
-                            </tr>
-                        </thead>
-                        <tr align="center">
-                            <td class="columnaAlta"> </td>
-                        </tr>                        
-                    </table><br /><i>
-                    * IVA No incluido</i><br /><br /><br /><br />
-                     </div>     <!-- Este texto solo se mostrara para las altas, el resto es comun -->
-
+                                <td class="columnaAlta"> </td>
+                            </tr>                        
+                        </table><br /><i>
+                        * IVA No incluido</i><br /><br /><br /><br />
+                         </div>     <!-- Este texto solo se mostrara para las altas, el resto es comun -->
+                    </div>
                      
                     Existen tres cuotas para la renovacion de Socio: mensual, trimestral y anual. Tiene dos maneras de pago : por <u>tarjeta</u> o <u>cuenta bancaria</u> o <u>PayPal</u>.
                     Una vez que recibamos su pago, el Sistema le activara su cuenta.<br />                                        
@@ -209,41 +206,7 @@
                         <img src="https://www.paypal.com/es_XC/i/btn/btn_xpressCheckout.gif"  style="margin-right:7px;">
                     </div>
                 </div>
-                 
-                <!-- Alta de Socio 
-                 <div id="altaSocio">
-                 <h3>Alta de Socio</h3>
-                     <hr />
-                     <br />
-                     <div id="totalCuotaAlta" class="totalCuota">
-                        <label for="fechaRenovacionNuevaAlta"><b>Fecha Renovacion :</b></label><div id="fechaRenovacionNuevaAlta"></div><br />
-                        <label for="fechaExpiracionNuevaAlta"><b>Fecha Expiracion :</b></label><div id="fechaExpiracionNuevaAlta"></div><br />
-                        <label for="importeNuevoAlta"><b>Importe :</b></label><div id="importeNuevoAlta"></div><br />
-                        <label for="importeIVAAlta"><b>IVA :</b></label><div id="importeIVAAlta"></div><br />
-                        <label for="importeTotalAlta"><b>Importe Total :</b></label><div id="importeTotalAlta"></div><br />
-                    </div>
-                    <br />
-                    Su estado actual es de Baja, por lo que puede haber ocurrido que usted ha sido dado de baja o nunca ha pertenecido a la MTB. Para darse de alta deberá pagar la cuota de Alta y al menos un mes de abono.<br />
-                    <br />
-                    Tiene dos maneras de pago : por <u>tarjeta</u> o <u>cuenta bancaria</u> o <u>PayPal</u>.
-                    Una vez que recibamos su pago, el Sistema le activara su cuenta.<br />
-                    <table id="tarifasRenovacionAlta" border="0" width="50%" >
-                        <caption><b>Tarifas de abono</b></caption>
-                        <thead>
-                            <tr align="center">
-                                <th>Mensual</th>
-                                <th>Trimestral</th>
-                                <th>Anual</th>
-                            </tr>
-                        </thead>
-                        <tr align="center">
-                            <td>10 € * </td>
-                            <td>30 € *</td>
-                            <td><font color="red">109 € *</font></td>
-                        </tr>                        
-                    </table><br />
-                    <i>* IVA No incluido</i><br /><br />
-                </div> -->
+             
               </div> 
         </div>
         <div id="noEsSocio">
@@ -269,9 +232,13 @@
         <div id="tablaMensajesNoLeidos" class="noLeidos"></div><br /><br />
         <h3>Mensajes Leidos</h3>
         <div id="tablaMensajesLeidos" class="leidos"></div><br /><br />        
+    </div>    
+    <div class="pestana" id="rutas">
+    <img src="../../Content/images/titulomisrutas.png" />
+    <div id="tablaRutas"></div>
+        
+    <br />
     </div>
-    <div class="pestana" id="estadisticas"></div>
-    <div class="pestana" id="rutas"></div>
 </div>
 
 <div id="ventanaCrear" class="ventana">
@@ -289,7 +256,7 @@
         <input type="button" class="k-button" id="botonModoEnvio" value="Responder" modoEnvio="Muestra" />
         <br /><br />
         <label for="mostrarAsunto"> Asunto</label<><input type="text" class="k-textbox muestra" id="mostrarAsunto" size="70" required/><br /><br />
-        <textarea id="mostrarCuerpoMensaje" class="muestra" rows="10" cols="60"></textarea>
+        <div id="mostrarCuerpoMensaje" class="muestra" rows="10" cols="60"></textarea>
         <div class="editorwrapper">
             <textarea id="mostrarCuerpoMensajeEditable" class="muestra" rows="10" cols="60"></textarea><br /><br />        
         </div>
@@ -327,10 +294,49 @@
         Mensajes por Pagina
         <input type="text" class="k-textbox comboPageSize" id="comboPageSizeLeido">
     </div>
-</script>  
+</script> 
+
+<!-- DETAIL TEMPLATE DEL KENDO GRID RUTAS -->    
+    <script type="text/x-kendo-template" id="templateDetailRutas">
+    <div class="tabsRutas">
+        <div class="detallesRutas">
+            <ul>
+                <li><img src="../../Content/images/Information-icon.png" height="30" /> Informacion</li>
+                <li><img src="../../Content/images/vermapa.png" height="30"/> Mapa</li>               
+            </ul>
+            <div class="pestanainfoMapas">
+                <div class="informacion" style="margin-top:30px">
+                    <table border="0">
+                    <tr>
+                    <td width="150">
+                        <img src="../../Content/images/map_app.png" />
+                    </td>
+                    <td>
+                        <ul class="listaInfo">
+                            <li><label><b>Nombre</b> : </label>#= Nombre #</li>
+                            <li><label><b>Kilometros</b> : </label>#= Kilometros #</li>
+                            <li><label><b>Enlace web</b> : </label><a href="#= URL #">#= URL #</a></li>
+                            <li><label><b>Autor : </b></label>#= Autor #
+                            <li><label><b>Descripcion </b>: </label><li>
+                            <div class="descripcion_#= idRuta #">
+                        
+                            </div> 
+                        </ul>
+                    </td>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="mapa">
+                <div class='map_canvas'></div>
+            </div>          
+        </div>
+    </div>
+    </script>  
 
 <script src="../../Scripts/jsactions/Perfil/Perfil.js" ></script>
 <script src="../../Scripts/jsactions/Perfil/Mensajeria.js" ></script>
 <script src="../../Scripts/jsactions/Perfil/Informacion.js" ></script>
 <script src="../../Scripts/jsactions/Perfil/Socio.js" ></script>
+<script src="../../Scripts/jsactions/Perfil/Rutas.js" ></script>
 </asp:Content>

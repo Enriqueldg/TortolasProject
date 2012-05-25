@@ -250,7 +250,7 @@
         // Mostramos los datos
         $("#mostrarDestinatario").val(mensaje.nombreRemitente);
         $("#mostrarAsunto").val(mensaje.asunto);
-        $("#mostrarCuerpoMensaje").val(mensaje.cuerpomensaje);
+        $("#mostrarCuerpoMensaje").html(mensaje.cuerpomensaje);
 
         // Ponemos los campos a no editable
         $(".muestra").attr("disable", true);

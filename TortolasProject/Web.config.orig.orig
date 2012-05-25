@@ -56,12 +56,21 @@
 			<providers>
 				<clear/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 				<add name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider" connectionStringName="icubeDBConnectionString" applicationName="/"/>
 				<add name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider" applicationName="/"/>
 =======
 				<add connectionStringName="icubeDBConnectionString" applicationName="/" name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider"/>
 				<add applicationName="/" name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider"/>
 >>>>>>> 0479bc27766516b141b9b63eacfd35bcb3ba0cc1
+=======
+				<add connectionStringName="icubeDBConnectionString" applicationName="/" name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider"/>
+				<add applicationName="/" name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider"/>
+=======
+				<add name="AspNetSqlRoleProvider" type="System.Web.Security.SqlRoleProvider" connectionStringName="icubeDBConnectionString" applicationName="/"/>
+				<add name="AspNetWindowsTokenRoleProvider" type="System.Web.Security.WindowsTokenRoleProvider" applicationName="/"/>
+>>>>>>> c37d9976b6f44a35a33cc6c2524dc95f4ebc15a9
+>>>>>>> 6c67f129dcb02d2c12d7997261bea3a1620fb62d
 			</providers>
 		</roleManager>
 		<pages>

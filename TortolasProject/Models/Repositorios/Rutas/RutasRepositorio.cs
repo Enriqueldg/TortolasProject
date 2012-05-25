@@ -18,6 +18,11 @@ namespace TortolasProject.Models.Repositorios
             return mtbDB.tbRuta.ToList();
         }
 
+        public IList<tbRuta> leerRutasUsuario(Guid idUsuario)
+        {
+            return mtbDB.tbRuta.Where(ruta => ruta.FKUsuario.Equals(idUsuario)).ToList();
+        }
+
         public tbRuta obtenerRuta(Guid idRuta)
         {
             return mtbDB.tbRuta.Where(ruta => ruta.idRuta.Equals(idRuta)).SingleOrDefault();

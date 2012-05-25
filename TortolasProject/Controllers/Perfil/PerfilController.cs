@@ -7,7 +7,7 @@ using TortolasProject.Controllers.Perfil;
 using TortolasProject.Models.Repositorios;
 using TortolasProject.Models;
 using System.IO;
-
+using Rotativa;
 
 namespace TortolasProject.Controllers.Perfil
 {
@@ -236,7 +236,9 @@ namespace TortolasProject.Controllers.Perfil
                 MotivosBaja = societe.MotivosBaja,
                 FechaAlta = societe.FechaAlta.ToShortDateString(),
                 FechaBaja = societe.FechaBaja.HasValue == true ? societe.FechaBaja.Value.ToShortDateString() : null,
-                FechaExpiracion = societe.FechaExpiracion.HasValue == true ? societe.FechaExpiracion.Value.ToShortDateString() : null
+                FechaExpiracion = societe.FechaExpiracion.HasValue == true ? societe.FechaExpiracion.Value.ToShortDateString() : null,
+                TipoDescuento = usuariosRepo.nombreDescuentoSocio(societe.FKDescuento),
+                ValorDescuento = usuariosRepo.valorDescuentoSocio(societe.FKDescuento)
 
             };
 
@@ -261,7 +263,7 @@ namespace TortolasProject.Controllers.Perfil
         }
 
         [HttpPost]
-        public void realizarPago(FormCollection data)
+        public ActionResult realizarPago(FormCollection data)
         {
             Boolean hayAlta = Boolean.Parse(data["hayAlta"]);
             IList<tbLineaFactura> lineasFacturas = new List<tbLineaFactura>();
@@ -305,7 +307,7 @@ namespace TortolasProject.Controllers.Perfil
 
             lineasFacturas.Add(renovacion);
             
-
+            
             tbCuota cuota = new tbCuota
             {
                 FKFactura = factura.idFactura,
@@ -323,9 +325,33 @@ namespace TortolasProject.Controllers.Perfil
 
             // Cambiamos el estado del socio            
             usuariosRepo.cambiarEstadoSocio(socio, "Pendiente", data["FechaExpiracion"]);
-            // FALTA AÑADIR PDF
             
+            // PDF
+            factura.LineasFactura = facturasRepo.listarLineasFactura(factura.idFactura);
+            factura.ResponsableName = obtenerJuntaDirectivaNickname(factura.FKJuntaDirectiva);
+
+
+            // Meter relacion
+            /*
+             * 
+             * 
+             */
+
+            return new Rotativa.RouteAsPdf("Facturas/facturaPDF", new { id = factura.idFactura })
+            {
+                FileName = "Factura"
+                              + factura.Fecha.Day
+                              + factura.Fecha.Month
+                              + factura.Fecha.Year
+                              + ".pdf"
+            }; //return RedirectToAction("generarFacturaPDF", "Facturas", new { id = factura.idFactura.ToString("B") });
         }
+        
+        private String obtenerJuntaDirectivaNickname(Guid idJuntaDirectiva)
+        {
+            return mtbDB.tbUsuario.Where(u => u.idUsuario == (mtbDB.tbSocio.Where(s => s.idSocio == idJuntaDirectiva).Single().FKUsuario)).Single().Nickname;
+        }
+
 
     }
 }

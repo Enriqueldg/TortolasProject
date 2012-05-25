@@ -113,22 +113,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Informes\DataSetFacturacion.cs">
-      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\DataSetFacturacion.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Informes\facturacion.aspx.cs">
-      <DependentUpon>facturacion.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Informes\facturacion.aspx.designer.cs">
-      <DependentUpon>facturacion.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Movimiento.cs" />
     <Compile Include="Models\mtbMalaga.designer.cs">
@@ -165,6 +149,7 @@
     <Content Include="Content\Administracion\Monitores\monitores.css" />
     <Content Include="Content\Administracion\Socios\AdminSocios.css" />
     <Content Include="Content\Administracion\Usuarios\Usuarios.css" />
+    <Content Include="Content\Captacion\Captacion.css" />
     <Content Include="Content\crud.css" />
     <Content Include="Content\emailBIG_titulo.png" />
     <Content Include="Content\Empresas\EmpresasNav.css" />
@@ -173,8 +158,6 @@
     <Content Include="Content\Empresas\EmpresasNew.css" />
     <Content Include="Content\Facturas\facturaPDF.css" />
     <Content Include="Content\Facturas\graficosContables.css" />
-    <Content Include="Content\Facturas\movimientoPDF.css" />
-    <Content Include="Content\Facturas\visorRuta.css" />
     <Content Include="Content\iconos\Amaranto-Office-Chair.png" />
     <Content Include="Content\iconos\Black-Dossier.png" />
     <Content Include="Content\iconos\Blue-Dossier.png" />
@@ -319,6 +302,7 @@
     <Content Include="Content\iconos\White-Dossier.png" />
     <Content Include="Content\iconos\Yellow-Dossier.png" />
     <Content Include="Content\images\bienvenidosocio.png" />
+    <Content Include="Content\images\calculatorahorro.png" />
     <Content Include="Content\images\comentario.png" />
     <Content Include="Content\images\cvv2.png" />
     <Content Include="Content\images\fondocarnet.png" />
@@ -455,12 +439,18 @@
     <Content Include="Content\images\nosocio.png" />
     <Content Include="Content\images\pago.gif" />
     <Content Include="Content\images\publicidad.jpg" />
+    <Content Include="Content\images\shopping-cart-icon.png" />
     <Content Include="Content\images\socios\danie.png" />
+    <Content Include="Content\images\tabaltas.png" />
+    <Content Include="Content\images\tabeventos.png" />
+    <Content Include="Content\images\tabnumerosocios.png" />
+    <Content Include="Content\images\tabpedidos.png" />
     <Content Include="Content\images\tituloadminsocios.png" />
     <Content Include="Content\images\titulobienvenida.png" />
     <Content Include="Content\images\titulocaptacion.png" />
     <Content Include="Content\images\titulocuotas.png" />
     <Content Include="Content\images\tituloinneradminsocios.png" />
+    <Content Include="Content\images\titulopedidos.png" />
     <Content Include="Content\images\titulorutas.png" />
     <Content Include="Content\images\titulousuarios.png" />
     <Content Include="Content\images\tituloventanaeditarsocio.png" />
@@ -533,7 +523,6 @@
     <Content Include="Content\images\tab_r.png" />
     <Content Include="Content\images\tour_hirschaidt011_1300216458.jpg" />
     <Content Include="Content\images\UserGroup.png" />
-    <Content Include="Informes\facturacion.aspx" />
     <Content Include="Rotativa\libeay32.dll" />
     <Content Include="Rotativa\libgcc_s_dw2-1.dll" />
     <Content Include="Rotativa\mingwm10.dll" />
@@ -915,7 +904,6 @@
     <Content Include="Scripts\jsactions\Facturas\graficosContables.js" />
     <Content Include="Scripts\jsactions\Facturas\movimientos.js" />
     <Content Include="Scripts\jsactions\Facturas\generarFacturaPDF.js" />
-    <Content Include="Scripts\jsactions\Facturas\Old\facturasDetalles.js" />
     <Content Include="Scripts\jsactions\Empresas\Asociaciones\Asociaciones.js" />
     <Content Include="Scripts\jsactions\Empresas\Contratos\Contratos.js" />
     <Content Include="Scripts\jsactions\Empresas\Convenios\Convenios.js" />
@@ -928,13 +916,14 @@
     <Content Include="Scripts\jsactions\Facturas\facturasIndex.js" />
     <Content Include="Scripts\jsactions\Facturas\facturasNav.js" />
     <Content Include="Scripts\jsactions\Facturas\Old\facturasNueva.js" />
-    <Content Include="Scripts\jsactions\Rutas\visorRutas.js" />
+    <Content Include="Scripts\jsactions\Facturas\visorRutas.js" />
     <Content Include="Scripts\jsactions\Pedidos\inventarioIndex.js" />
     <Content Include="Scripts\jsactions\Pedidos\pedidosCerrados.js" />
     <Content Include="Scripts\jsactions\Perfil\Informacion.js" />
     <Content Include="Scripts\jsactions\Pedidos\pedidosIndex.js" />
     <Content Include="Scripts\jsactions\Perfil\Mensajeria.js" />
     <Content Include="Scripts\jsactions\Perfil\Perfil.js" />
+    <Content Include="Scripts\jsactions\Perfil\Rutas.js" />
     <Content Include="Scripts\jsactions\Perfil\Socio.js" />
     <Content Include="Scripts\jsactions\Rutas\Rutas.js" />
     <Content Include="Scripts\jsactions\siteMaster.js" />
@@ -1064,7 +1053,6 @@
     <Content Include="Scripts\styles\textures\highlight.png" />
     <Content Include="Views\Administracion\Index.aspx" />
     <Content Include="Views\Facturas\PDF\facturaPDF.aspx" />
-    <Content Include="Views\Facturas\facturaPDF.ascx" />
     <Content Include="Views\Facturas\facturasNav.ascx" />
     <Content Include="Views\Facturas\graficosContables.aspx" />
     <Content Include="Views\Cursillos\Index.aspx" />
@@ -1136,26 +1124,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Browsers\qt.browser" />
-    <None Include="Content\Rutas\rutaGPX.gpx" />
-    <None Include="Content\Rutas\ruta.kml" />
-    <None Include="Informes\DataSetFacturacion.xsc">
-      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
-    </None>
     <Content Include="Content\iconos\desktop-business-icons-PNG.zip" />
     <Content Include="Content\iconos\Dossier-png.zip" />
     <Content Include="Content\iconos\Financial-Accounting-png.zip" />
+    <Content Include="App_Browsers\qt.browser" />
+    <None Include="Content\Rutas\rutaGPX.gpx" />
+    <None Include="Content\Rutas\ruta.kml" />
     <Content Include="Content\iconos\iWork10-png.zip" />
     <Content Include="Content\iconos\Office-Chairs-png.zip" />
     <Content Include="Content\iconos\office_space_png.zip" />
-    <None Include="Informes\DataSetFacturacion.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSetFacturacion.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Informes\DataSetFacturacion.xss">
-      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
-    </None>
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <SubType>Designer</SubType>
@@ -1172,9 +1149,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Informes\facturacion.resx">
-      <DependentUpon>facturacion.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Informes\facturacion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>facturacion.cs</LastGenOutput>

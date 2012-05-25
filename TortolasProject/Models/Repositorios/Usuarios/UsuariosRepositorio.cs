@@ -218,6 +218,11 @@ namespace TortolasProject.Models.Repositorios
             return mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.idDescuentoSocio.Equals(abuscar)).Single().Nombre;
         }
 
+        public int valorDescuentoSocio(Guid abuscar)
+        {
+            return mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.idDescuentoSocio.Equals(abuscar)).Single().Cantidad;
+        }
+
         public void crearCuota(tbCuota cuota)
         {
             mtbMalagaDB.tbCuota.InsertOnSubmit(cuota);

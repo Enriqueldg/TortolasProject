@@ -44,6 +44,26 @@ namespace TortolasProject.Controllers
             return Json(rutas);
         }
 
+        [HttpPost]
+        public JsonResult leerRutasUsuario(FormCollection data)
+        {
+            Guid idUsuario = Guid.Parse(data["idUsuario"]);
+            var rutas = from r in RutasRepo.leerRutasUsuario(idUsuario)
+                        select new
+                        {
+                            idRuta = r.idRuta,
+                            Nombre = r.Nombre,
+                            Ruta = r.rutaArchivo,
+                            URL = r.URL,
+                            Descripcion = r.Descripcion,
+                            idUsuario = r.FKUsuario,
+                            Dificultad = r.FKDificultad.HasValue ? mtbDB.tbDificultad.Where(dific => dific.idDificultad.Equals(r.FKDificultad)).Single().Nombre : null,
+                            Kilometros = r.Kilometros,
+                            Autor = UsuariosRepo.obtenerUsuario(r.FKUsuario).Nickname
+                        };
+            return Json(rutas);
+        }
+
         // Funcion para insertar una nueva Ruta
         [HttpPost]
         [ValidateInput(false)]

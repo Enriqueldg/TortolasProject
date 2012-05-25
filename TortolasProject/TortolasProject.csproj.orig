@@ -107,6 +107,7 @@
     <Compile Include="Controllers\Perfil\PerfilController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\PublicidadController.cs" />
+    <Compile Include="Controllers\RutasController.cs" />
     <Compile Include="Controllers\Socios\SociosController.cs" />
     <Compile Include="Controllers\Usuarios\UsuariosController.cs" />
     <Compile Include="Global.asax.cs">
@@ -145,6 +146,7 @@
     <Compile Include="Models\Repositorios\Pedidos\InventarioRepositorio.cs" />
     <Compile Include="Models\Repositorios\Pedidos\PedidosRepositorio.cs" />
     <Compile Include="Models\Repositorios\Perfil\MensajesRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Rutas\RutasRepositorio.cs" />
     <Compile Include="Models\Repositorios\Usuarios\UsuariosRepositorio.cs" />
     <Compile Include="Models\tbFactura.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -235,6 +237,8 @@
     <Content Include="Content\iconos\Disabled\72x72\Red X.png" />
     <Content Include="Content\iconos\Disabled\72x72\Unlock.png" />
     <Content Include="Content\iconos\dollar.png" />
+    <Content Include="Content\iconos\Email-64.png" />
+    <Content Include="Content\iconos\Gnome-Mail-Mark-Unread-64.png" />
     <Content Include="Content\iconos\Green-Dossier.png" />
     <Content Include="Content\iconos\Hot\128x128\Abacus.png" />
     <Content Include="Content\iconos\Hot\128x128\Money Bag.png" />
@@ -275,6 +279,9 @@
     <Content Include="Content\iconos\Keynote-On.png" />
     <Content Include="Content\iconos\Lime-Dossier.png" />
     <Content Include="Content\iconos\Magenta-Dossiers.png" />
+    <Content Include="Content\iconos\Mail-48.png" />
+    <Content Include="Content\iconos\map_icon.png" />
+    <Content Include="Content\iconos\Money-256.png" />
     <Content Include="Content\iconos\money.png" />
     <Content Include="Content\iconos\monitor-128.png" />
     <Content Include="Content\iconos\monitor-256.png" />
@@ -313,8 +320,12 @@
     <Content Include="Content\iconos\wallet.png" />
     <Content Include="Content\iconos\White-Dossier.png" />
     <Content Include="Content\iconos\Yellow-Dossier.png" />
->>>>>>> 18a79459df91f18ef8d4ce6cba767b9d993cf2ee
+=======
+    <Content Include="Content\Facturas\movimientoPDF.css" />
+    <Content Include="Content\Facturas\visorRuta.css" />
+>>>>>>> 0479bc27766516b141b9b63eacfd35bcb3ba0cc1
     <Content Include="Content\images\bienvenidosocio.png" />
+    <Content Include="Content\images\comentario.png" />
     <Content Include="Content\images\cvv2.png" />
     <Content Include="Content\images\fondocarnet.png" />
     <Content Include="Content\Facturas\facturasIndex.css" />
@@ -429,8 +440,11 @@
     <Content Include="Content\images\empresas.png" />
     <Content Include="Content\images\eventostitulo.png" />
     <Content Include="Content\images\exclamacion.png" />
+    <Content Include="Content\images\Information-icon.png" />
     <Content Include="Content\images\info_titulo.png" />
     <Content Include="Content\images\junta-new.png" />
+    <Content Include="Content\images\mapasubir.png" />
+    <Content Include="Content\images\map_app.png" />
     <Content Include="Content\images\monitores\01_1024x768.jpg" />
     <Content Include="Content\images\monitores\13.jpg" />
     <Content Include="Content\images\monitores\17881-1280x800-husky.jpg" />
@@ -440,6 +454,7 @@
     <Content Include="Content\images\monitores\4.jpg" />
     <Content Include="Content\images\monitores\5.jpg" />
     <Content Include="Content\images\monitores\chucknorris.jpg" />
+    <Content Include="Content\images\nuevaruta.png" />
     <Content Include="Content\images\patrocinador.jpg" />
     <Content Include="Content\images\monitores\monitores_titulo.png" />
     <Content Include="Content\images\monitores_titulo.png" />
@@ -448,8 +463,11 @@
     <Content Include="Content\images\publicidad.jpg" />
     <Content Include="Content\images\socios\danie.png" />
     <Content Include="Content\images\tituloadminsocios.png" />
+    <Content Include="Content\images\titulobienvenida.png" />
+    <Content Include="Content\images\titulocaptacion.png" />
     <Content Include="Content\images\titulocuotas.png" />
     <Content Include="Content\images\tituloinneradminsocios.png" />
+    <Content Include="Content\images\titulorutas.png" />
     <Content Include="Content\images\titulousuarios.png" />
     <Content Include="Content\images\tituloventanaeditarsocio.png" />
     <Content Include="Content\images\tituloventananuevosocio.png" />
@@ -458,12 +476,14 @@
     <Content Include="Content\images\usuarios\Abstract_wall.png" />
     <Content Include="Content\images\usuarios\darthvader_1600.jpg" />
     <Content Include="Content\images\usuarios\full-moon-cat-4913.jpg" />
+    <Content Include="Content\images\vermapa.png" />
     <Content Include="Content\logo_azul.png" />
     <Content Include="Content\master.css" />
     <Content Include="Content\nav.css" />
     <Content Include="Content\newCascadeStyleSheet.css" />
     <Content Include="Content\Perfil\Perfil.css" />
     <Content Include="Content\images\proveedores.jpg" />
+    <Content Include="Content\Rutas\Rutas.css" />
     <Content Include="Content\slide.css" />
     <Content Include="Content\style.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -920,6 +940,7 @@
     <Content Include="Scripts\jsactions\Perfil\Mensajeria.js" />
     <Content Include="Scripts\jsactions\Perfil\Perfil.js" />
     <Content Include="Scripts\jsactions\Perfil\Socio.js" />
+    <Content Include="Scripts\jsactions\Rutas\Rutas.js" />
     <Content Include="Scripts\jsactions\siteMaster.js" />
     <Content Include="Scripts\jsactions\Pedidos\articulosIndex.js" />
     <Content Include="Scripts\kendo.all.min.js" />
@@ -1051,6 +1072,7 @@
     <Content Include="Views\Facturas\graficosContables.aspx" />
     <Content Include="Views\Cursillos\Index.aspx" />
     <Content Include="Views\Cursillos\VistaCrearCursillo.ascx" />
+    <Content Include="Views\Facturas\informesContables.aspx" />
     <Content Include="Views\Facturas\Old\editarFactura.aspx" />
     <Content Include="Views\Facturas\Old\leerFactura.aspx" />
     <Content Include="Views\Articulos\AnadirArticulo.ascx" />
@@ -1075,6 +1097,7 @@
     <Content Include="Views\Perfil\Index.aspx" />
     <Content Include="Views\Inventario\Index.aspx" />
     <Content Include="Views\Pedidos\Index.aspx" />
+    <Content Include="Views\Rutas\Index.aspx" />
     <Content Include="Views\Socios\Index.aspx" />
     <Content Include="Views\Usuarios\Index.aspx" />
     <Content Include="Web.config">
@@ -1130,25 +1153,17 @@
     <Content Include="Content\iconos\Office-Chairs-png.zip" />
     <Content Include="Content\iconos\office_space_png.zip" />
 >>>>>>> 18a79459df91f18ef8d4ce6cba767b9d993cf2ee
-    <None Include="Informes\DataSetFacturacion.xsc">
-      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
-    </None>
-    <None Include="Informes\DataSetFacturacion.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSetFacturacion.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Informes\DataSetFacturacion.xss">
-      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
-    </None>
-=======
     <Content Include="Content\iconos\desktop-business-icons-PNG.zip" />
     <Content Include="Content\iconos\Dossier-png.zip" />
     <Content Include="Content\iconos\Financial-Accounting-png.zip" />
     <Content Include="Content\iconos\iWork10-png.zip" />
     <Content Include="Content\iconos\Office-Chairs-png.zip" />
     <Content Include="Content\iconos\office_space_png.zip" />
->>>>>>> 18a79459df91f18ef8d4ce6cba767b9d993cf2ee
+=======
+    <Content Include="App_Browsers\qt.browser" />
+    <None Include="Content\Rutas\rutaGPX.gpx" />
+    <None Include="Content\Rutas\ruta.kml" />
+>>>>>>> 0479bc27766516b141b9b63eacfd35bcb3ba0cc1
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
@@ -1171,9 +1186,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Informes\facturacion.resx">
-      <DependentUpon>facturacion.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Informes\facturacion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>facturacion.cs</LastGenOutput>

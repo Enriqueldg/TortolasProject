@@ -50,6 +50,7 @@
                 $("#carnetApellidos").append("  " + socio.Apellidos);
                 $("#carnetDNI").append("  " + socio.DNI);
                 $("#estadoSubscripcion").append(socio.Estado);
+                $("#tipoDescuento").append("  " + socio.TipoDescuento + " <b>(" + socio.ValorDescuento + "%)</b>");
 
                 // Rellenamos las tablas con los datos de la Base de Datos
                 $(".columnaMensual").text("* " + cuotas["Mensual"] + " €");
@@ -140,10 +141,12 @@
                     $("#mensajeExpiracion").html("El dia de expiracion de su subscripcion de Socio en MTB es <font color='green'>" + socio.FechaExpiracion + " </font>");
                     $("#renovacionSocio").show();
                     $("#tituloRenovacion").html("<h3>Renovacion de Socio</h3>");
+                    $("#alta").hide();
                 }
                 else if (socio.Estado == "Inactivo") {
-                    $("#mensajeExpiracion").html("Su subscripcion expiro el dia <font color='red'>" + socio.FechaExpiracion + " cucu</font>.<br> Para volver a volver a estar activo debe renovar su subscripcion, para ello debe pagar la cuota mensual, trimestral o anual.");
+                    $("#mensajeExpiracion").html("Su subscripcion expiro el dia <font color='red'>" + socio.FechaExpiracion + "</font>.<br> Para volver a volver a estar activo debe renovar su subscripcion, para ello debe pagar la cuota mensual, trimestral o anual.");
                     $("#renovacionSocio").show();
+                    $("#alta").hide();
                     $("#tituloRenovacion").html("<h3>Renovacion de Socio</h3>");
                 }
                 else if (socio.Estado == "Baja") {
@@ -166,7 +169,7 @@
 
                 var aEnviar = {};
                 var concepto = null;
-                var descripcion = null;
+                var descripcion = null;                
                 aEnviar["importeRenovacion"] = $("#importeNuevo").text();
                 aEnviar["importeAlta"] = $("#importeAlta").text();
                 aEnviar["FechaExpiracion"] = $("#fechaExpiracionNueva").text();
