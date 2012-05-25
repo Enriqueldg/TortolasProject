@@ -13,6 +13,8 @@ namespace TortolasProject.Controllers
         static PedidosRepositorio PedidosRepo = new PedidosRepositorio();
         static ArticulosRepositorio ArticulosRepo = new ArticulosRepositorio();
         static UsuariosRepositorio UsuariosRepo = new UsuariosRepositorio();
+        static FacturasRepositorio FacturasRepo = new FacturasRepositorio();
+        mtbMalagaDataContext db = new mtbMalagaDataContext();
 
         public ActionResult Index()
         {
@@ -72,10 +74,35 @@ namespace TortolasProject.Controllers
                               idPedido = ped.idPedidoGlobal,
                               descuento = ped.DescuentoFijo,
                               total = ped.Total,
-                              estado = ped.FechaLimite.Value.ToShortDateString(),
+                              fechaLimite = ped.FechaLimite.Value.ToShortDateString(),
+                              fechaLimitePago = ped.FechaLimitePago.Value.ToShortDateString(),
                               nombre = ped.Nombre
                           };
             return Json(pedidos);
+        }
+
+        public ActionResult leerTodosCerrados()
+        {
+            var pedidos = from ped in PedidosRepo.listarPedidosCerrados()
+                          select new
+                          {
+                              idPedido = ped.idPedidoGlobal,
+                              descuento = ped.DescuentoFijo,
+                              total = ped.Total,
+                              fechaLimite = ped.FechaLimite.Value.ToShortDateString(),
+                              fechaLimitePago = ped.FechaLimitePago.Value.ToShortDateString(),
+                              nombre = ped.Nombre
+                          };
+            return Json(pedidos);
+        }
+
+        public int cerrarPedido(FormCollection data)
+        {
+            Guid idPedidoGlobal = Guid.Parse(data["idPedidoGlobal"]);
+            Guid estado = Guid.Parse("48a02026-e354-4973-ab00-976a36cdd998");
+            PedidosRepo.setEstadoPedido(idPedidoGlobal, estado);
+
+            return 1;
         }
 
         public int anadirPedido(FormCollection Data)
@@ -83,6 +110,7 @@ namespace TortolasProject.Controllers
             String nombre = Data["Nombre"];
             Decimal descuento = Decimal.Parse(Data["Descuento"]);
             DateTime date = DateTime.Parse(Data["Fecha"]);
+            DateTime dateP = DateTime.Parse(Data["FechaPago"]);
             var articulosRaw = System.Web.Helpers.Json.Decode(Data["Articulos"]);
             Guid idPedidoGlobal = Guid.NewGuid();
             tbPedidoGlobal f = new tbPedidoGlobal()
@@ -91,7 +119,8 @@ namespace TortolasProject.Controllers
                 DescuentoFijo = descuento,
                 idPedidoGlobal = idPedidoGlobal,
                 Total = 0,
-                FechaLimite = date
+                FechaLimite = date,
+                FechaLimitePago = dateP
             };
 
             PedidosRepo.anadirPedidoGlobal(f);
@@ -119,7 +148,6 @@ namespace TortolasProject.Controllers
                                     {
                                         usuario = UsuariosRepo.obtenerUsuario(peds.FKUsuario).Nickname,
                                         subtotal = peds.Subtotal,
-                                        pagado = peds.Pagado,
                                         idPedidoUsuario = peds.idPedidoUsuario,
 
                                         Nombre = UsuariosRepo.obtenerUsuario(peds.FKUsuario).Nombre,
@@ -141,7 +169,6 @@ namespace TortolasProject.Controllers
                               idPedidoUsuario = ped.idPedidoUsuario,
                               FKPedidoGlobal = ped.FKPedidoGlobal,
                               FKUsuario = ped.FKUsuario,
-                              Pagado = ped.Pagado,
                               Subtotal = ped.Subtotal
                           };
             return Json(pedidosUsu);
@@ -158,8 +185,7 @@ namespace TortolasProject.Controllers
             {
                 idPedidoUsuario = idPedidoUsuario,
                 FKPedidoGlobal = idPedido,
-                FKUsuario = FKUsuario,
-                Pagado = "No"                
+                FKUsuario = FKUsuario,               
             };
 
             IList<tbLineaPedidoUsuario> lista = new List<tbLineaPedidoUsuario>();
@@ -187,5 +213,58 @@ namespace TortolasProject.Controllers
             return 1;
         }
 
-      }
+        //*******************************PEDIDOS CERRADOS******************************
+        public void facturarPedidoUsuario(FormCollection data)
+        {
+            Guid id = Guid.Parse(data["idPedidoUsuario"]);
+            tbPedidoUsuario p = PedidosRepo.getPedidoUsuarioById(id);
+            Guid idFactura = Guid.NewGuid()
+            tbFactura f = new tbFactura
+            {
+                idFactura = idFactura,
+                Concepto = "Pedido usuario: "+UsuariosRepo.obtenerUsuario(p.FKUsuario),
+                Fecha = DateTime.Today,
+                FKPedidoUsuario = p.idPedidoUsuario,
+                FKUsuario = p.FKUsuario,
+                FKJuntaDirectiva = obtenerJuntaDirectivaLogueado(),
+                FKEstado = FacturasRepo.leerEstadoByNombre("Pagado").idEstadoFactura
+            };
+
+            IList<tbLineaPedidoUsuario> lista = PedidosRepo.getLineasPedidoUsuarioByPedidoUsuario(id);
+            IList<tbLineaFactura> lineasFactura = new List<tbLineaFactura>();
+            Decimal total = 0;
+            Decimal unidades = 0;
+            Decimal precio = 0;
+            foreach (tbLineaPedidoUsuario linea in lista)
+            {
+                unidades = linea.Unidades;
+                precio = ArticulosRepo.leerArticulo(linea.FKArticulo).Precio.Value;
+                tbLineaFactura lineaFactura = new tbLineaFactura()
+                {
+                    idLineaFactura = Guid.NewGuid(),
+                    Descripcion = ArticulosRepo.leerArticulo(linea.FKArticulo).Nombre,
+                    Unidades = linea.Unidades,
+                    PrecioUnitario = ArticulosRepo.leerArticulo(linea.FKArticulo).Precio.Value,
+                    Total = unidades * precio,
+                    FKArticulo = linea.FKArticulo
+                };
+                lineasFactura.Add(lineaFactura);
+                total = total + (unidades*precio);
+            }
+            f.BaseImponible = total;
+
+            FacturasController.crearFacturaExterna(f,lineasFactura);
+        }
+
+        private Guid obtenerJuntaDirectivaLogueado()
+        {
+            Guid user = HomeController.obtenerUserIdActual();
+            return db.tbJuntaDirectiva.Where(jd => jd.FKSocio == db.tbSocio.Where(s => s.FKUsuario == db.tbUsuario.Where(u => u.FKUser == user).Single().idUsuario).Single().idSocio).Single().FKSocio;
+        }
+
+        private String obtenerJuntaDirectivaNickname(Guid idJuntaDirectiva)
+        {
+            return db.tbUsuario.Where(u => u.idUsuario == (db.tbSocio.Where(s => s.idSocio == idJuntaDirectiva).Single().FKUsuario)).Single().Nickname;
+        }
+    }
 }

@@ -60,7 +60,8 @@
 <div id="anadirPedidoVentana"> 
     Nombre <input type="text" id="nombre"/> <br /> 
     Descuento <input type="text" id="descuento"/> <br />
-    Fecha limite <input id="fechaPedido" />
+    Fecha límite de inscripción<input id="fechaPedido" />
+    Fecha límite de pago<input id="fechaPedidoPago" />
     <div id="articulosGridDisponibles"></div>
     <div id="articulosGridAnadirPedido"></div>
     <div id="anadirPedidoVentanaAgregarButton"><input type="button" class="k-button" value="Agregar" /></div>

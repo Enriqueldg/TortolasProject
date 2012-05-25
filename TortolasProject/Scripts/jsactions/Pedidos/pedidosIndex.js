@@ -254,6 +254,12 @@ $(document).ready(function () {
         format: "dd/MM/yyyy"
     });
 
+     $("#fechaPedidoPago").kendoDatePicker({
+        start: "day",
+        depth: "year",
+        format: "dd/MM/yyyy"
+    });
+
     $("#anadirPedidoVentanaCancelar").live('click', function () {
         var w = $("#anadirPedidoVentana").data("kendoWindow");
         w.close();
@@ -264,6 +270,7 @@ $(document).ready(function () {
         var nom = $("#nombre").val();
         var desc = $("#descuento").val();
         var date = $("#fechaPedido").val();
+        var dateP = $("#fechaPedidoPago").val();
         var articulosRaw = datasourceGrid.view();
         var articulos = new Array();
         for (var i = 0; i < articulosRaw.length; i++) {
@@ -276,6 +283,7 @@ $(document).ready(function () {
             Nombre: nom,
             Descuento: desc,
             Fecha: date,
+            FechaPago: dateP,
             Articulos: kendo.stringify(articulos)
         };
         url = 'Pedidos/anadirPedido';
@@ -292,10 +300,19 @@ $(document).ready(function () {
     $("#cerrarPedidoButton").click(function () {
         var uid = $("#pedidosGrid .k-state-selected").attr("data-uid");
         var fila = gridPedidos.dataSource.getByUid(uid);
-
-        gridPedidosCerrados.dataSource().Add(fila);
-        gridPedidos.dataSource().remove(fila);
+        console.log(fila);
+        data = {
+            idPedidoGlobal: fila.idPedido
+        };
+        alert(fila.idPedido);
+        url = 'Pedidos/cerrarPedido';
+        $.post(url, data, function (data){
+            gridPedidos.dataSource.remove(fila);
+            var tabla = $("#pedidosGrid").data("kendoGrid");
+            tabla.refresh();
+            location.reload("Pedidos/PedidosCerrados");
         });
+    });
     
     $("#anadirPedidoButton").click(function () {
         $("#nombre").val("");
@@ -374,8 +391,12 @@ $(document).ready(function () {
                       title: "Nombre"
                   },
                   {
-                      field: "estado",
-                      title: "Fecha Límite"
+                      field: "fechaLimite",
+                      title: "Fecha límite de inscripción"
+                  },
+                  {
+                      field: "fechaLimitePago",
+                      title: "Fecha límite de pago"
                   },
                    {
                        field: "descuento",
@@ -432,10 +453,6 @@ $(document).ready(function () {
                {
                    field: "subtotal",
                    title: "Subtotal"
-               },
-               {
-                   field: "pagado",
-                   title: "Pagado"
                }],
                dataSource: {
                    transport: {
@@ -510,7 +527,6 @@ $(document).ready(function () {
        }
 
        function inicializarTabla2(e) {
-       console.log(e.data.idPedidoUsuario);
        $(".tabsPedidosUsuario").kendoTabStrip();
        $(".lineasPedidoUsuario").kendoGrid({
                selectable: true,

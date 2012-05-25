@@ -201,7 +201,10 @@
                             <img src="../../Content/images/UserGroup.png" width="10%" /><%: Html.ActionLink("Inventario", "Index", "Inventario") %>
                         </li>
                         <li>
-                            <img src="../../Content/images/UserGroup.png" width="10%" /><%: Html.ActionLink("Pedidos", "Index", "Pedidos") %>
+                            <img src="../../Content/images/UserGroup.png" width="10%" /><%: Html.ActionLink("Pedidos Abiertos", "Index", "Pedidos") %>
+                        </li>
+                        <li>
+                            <img src="../../Content/images/UserGroup.png" width="10%" /><%: Html.ActionLink("Pedidos Cerrados", "PedidosCerrados", "Pedidos")%>
                         </li>
                         <li>
                             <img src="../../Content/images/UserGroup.png" width="10%" /><%: Html.ActionLink("Empresas", "Index", "Empresas") %>

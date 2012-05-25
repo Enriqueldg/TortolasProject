@@ -13,7 +13,14 @@ namespace TortolasProject.Models.Repositorios
         //****************************************PEDIDOS*****************************************
         public IList<tbPedidoGlobal> listarPedidos()
         {
-            return mtbMalagaDB.tbPedidoGlobal.ToList();
+            Guid estado = mtbMalagaDB.tbEstadoPedido.Where(a => a.Estado.Equals("Abierto")).Single().idEstadoPedido;
+            return mtbMalagaDB.tbPedidoGlobal.Where(a => a.FKEstadoPedido == estado).ToList();
+        }
+
+        public IList<tbPedidoGlobal> listarPedidosCerrados()
+        {
+            Guid estado = mtbMalagaDB.tbEstadoPedido.Where(a => a.Estado.Equals("Cerrado")).Single().idEstadoPedido;
+            return mtbMalagaDB.tbPedidoGlobal.Where(a => a.FKEstadoPedido == estado).ToList();
         }
 
         public IList<tbRelacionPedidoGlobalArticulo> listarRelacionPedidoGlobalArticulo()
@@ -36,6 +43,12 @@ namespace TortolasProject.Models.Repositorios
         public tbPedidoGlobal getPedidoGlobalById(Guid id)
         {
             return mtbMalagaDB.tbPedidoGlobal.Where(a => a.idPedidoGlobal == id).Single();
+        }
+
+        public void setEstadoPedido(Guid idPedidoGlobal, Guid FKEstado)
+        {
+            getPedidoGlobalById(idPedidoGlobal).FKEstadoPedido = FKEstado;
+            save();
         }
 
         public void anadirPedidoGlobal(tbPedidoGlobal f)

@@ -6,7 +6,55 @@
 
 <asp:Content ID="PedidosCerradosMain" ContentPlaceHolderID="MainContent" runat="server">
 
+<div id="facturarPedidoButton"><input type="button" class="k-button" value="Facturar pedido" /></div>
 <div id="PedidosCerradosGrid"></div>
+
+<script type="text/x-kendo-template" id="templateDetailPedidos">
+    <div class="tabsPedidos">
+                    <ul>
+                        <li class="k-state-active">
+                           Pedidos
+                        </li>
+                        <li>
+                            Articulos disponibles para el pedido:
+                        </li>
+                    </ul>
+                    <div>
+                        <div class="lineasPedido"></div>
+                    </div>
+                    <div class="detallesPedidos">                                               
+                        <div id="articulosDetallesPedido"></div>
+                    </div>
+                </div>
+</script>
+
+<script type="text/x-kendo-template" id="templateDetailPedidoUsuarios">
+
+    <div class="tabsPedidosUsuario">
+        <ul>
+            <li class="k-state-active">
+                Articulos del pedido de usuario
+            </li>
+            <li>
+                Detalles del usuario
+            <li>
+        </ul>
+        <div>
+            <div class="lineasPedidoUsuario"></div>
+        </div>
+        <div class="detallesPedidoUsuario">
+            <ul>
+                <li><label>Nombre: </label>#= Nombre#</li>
+                <li><label>Apellidos: </label>#= Apellidos#</li>
+                <li><label>Sexo: </label>#= Sexo#</li>
+                <li><label>Email: </label>#= Email#</li>
+                <li><label>Avatar: </label>#= Avatar#</li>
+                <li><label>Nacionaliad: </label>#= Nacionaliad#</li>
+            </ul>
+        </div>
+    </div> 
+
+</script>
 
 </asp:Content>
 
