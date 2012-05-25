@@ -251,6 +251,46 @@ namespace TortolasProject.Controllers
                 lineasFactura.Add(lineaFactura);
                 total = total + (unidades*precio);
             }
+
+            if (!UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).Equals(default))
+            {
+                tbSocio socio = UsuariosRepo.obtenerSocio(UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).idUsuario);
+                foreach(tbDescuentoSocio ds in UsuariosRepo.listarDescuentosSocio())
+                {
+                    if(ds.Nombre.Equals("Basico")) 
+                    {
+                        tbLineaFactura linea = new tbLineaFactura
+                        {
+                            idLineaFactura =Guid.NewGuid(),
+                            Concepto = "Descuento: "+ds.Nombre,
+                            Unidades = -ds.Cantidad,
+                            PrecioUnitario = total,
+                            Total = (-ds.Cantidad) * total,
+                            FKFactura = idFactura
+                        };
+                        lineasFactura.Add(linea);
+                    }
+                    if(ds.Nombre.Equals("Antiguedad"))
+                    {
+                        if((socio.FechaAlta - socio.FechaBaja).TotalSeconds > new DateTime(2012,1,1) - new DateTime(2012 - ds.Annos,1,1))
+                        {
+                            tbLineaFactura linea = new tbLineaFactura
+                            {
+                                idLineaFactura =Guid.NewGuid(),
+                                Concepto = "Descuento: "+ds.Nombre,
+                                Unidades = -ds.Cantidad,
+                                PrecioUnitario = total,
+                                Total = (-ds.Cantidad) * total,
+                                FKFactura = idFactura
+                            };
+                            lineasFactura.Add(linea);
+                        }
+
+                }
+
+
+            }
+            
             f.BaseImponible = total;
 
             FacturasController.crearFacturaExterna(f,lineasFactura);

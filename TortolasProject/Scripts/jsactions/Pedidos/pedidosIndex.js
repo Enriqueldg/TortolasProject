@@ -300,11 +300,9 @@ $(document).ready(function () {
     $("#cerrarPedidoButton").click(function () {
         var uid = $("#pedidosGrid .k-state-selected").attr("data-uid");
         var fila = gridPedidos.dataSource.getByUid(uid);
-        console.log(fila);
         data = {
             idPedidoGlobal: fila.idPedido
         };
-        alert(fila.idPedido);
         url = 'Pedidos/cerrarPedido';
         $.post(url, data, function (data){
             gridPedidos.dataSource.remove(fila);
