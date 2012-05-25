@@ -1,5 +1,9 @@
 ﻿$(document).ready(function () {
 
+    $("#tabsAdminJunta").kendoTabStrip();
+       
+    $("#fechaBaja").hide();
+
     // DataSources varios
     var dataSourceCargos = new kendo.data.DataSource({
         transport: {
@@ -41,7 +45,15 @@
     $(".comboEstado").kendoDropDownList({
         dataSource : [{ valor: "Activo" , nombre :"Activo" }, { valor: "Inactivo", nombre:"Inactivo" }, { valor:"Baja", nombre:"Baja" } , { valor:"Pendiente", nombre:"Pendiente" }],
         dataValueField : "valor",
-        dataTextField : "nombre"
+        dataTextField : "nombre",
+        change: function(){
+            if(this.value()=="Baja"){
+                $("#fechaBaja").show();
+            }
+            else{
+                $("#fechaBaja").hide();
+            }
+        }
     });
 
     // Cargamos la tabla de Socios
@@ -158,6 +170,21 @@
                                 }
                             },
                             {
+                                field: "DescuentoSocio",
+                                title: "Tipo Descuento",
+                                filterable: {
+                                    extra: false, //do not show extra filters
+                                    operators: { // redefine the string operators
+                                        string: {
+                                            eq: "Es igual a..",
+                                            neq: "No es igual a...",
+                                            startswith: "Empieza por...",
+                                            contains: "Contiene"
+                                        }
+                                    }
+                                }
+                            },
+                            {
                                 title: "Herramientas",
                                 command:
                                 [
@@ -186,7 +213,7 @@
         selectable: true,
         scrollable: false,
         filterable: true,
-       // toolbar: kendo.template($("#templateToolbarAdminSocio").html()),
+        toolbar: kendo.template($("#templateToolbarAdminJunta").html()),
        // detailTemplate: kendo.template($("#templateDetailAdminSocio").html()),
       //  detailInit: inicializarTablaAdminSocio,
         columns: [
@@ -237,23 +264,8 @@
                                 }
                             },
                             {
-                                field: "FechaAlta",
-                                title: "Alta",
-                                filterable: {
-                                    extra: false, //do not show extra filters
-                                    operators: { // redefine the string operators
-                                        string: {
-                                            eq: "Es igual a..",
-                                            neq: "No es igual a...",
-                                            startswith: "Empieza por...",
-                                            contains: "Contiene"
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                field: "FechaExpiracion",
-                                title: "Expiracion",
+                                field: "Cargo",
+                                title: "Cargo",
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -282,15 +294,59 @@
                                 }
                             },
                             {
+                                field: "Email",
+                                title: "Email",
+                                filterable: {
+                                    extra: false, //do not show extra filters
+                                    operators: { // redefine the string operators
+                                        string: {
+                                            eq: "Es igual a..",
+                                            neq: "No es igual a...",
+                                            startswith: "Empieza por...",
+                                            contains: "Contiene"
+                                        }
+                                    }
+                                }
+                            },
+                          /*  {
                                 title: "Herramientas",
                                 command:
                                 [
                                     { text: "editar", className: "editarSocio" },
                                     { text: "eliminar", className: "eliminarSocio" }
                                 ]
-                            }
+                            }*/
 
-                    ]
+                    ],
+                    change: function(){                                                                        
+                        var record = this.dataSource.getByUid(this.select().data("uid"));
+                        if(record.Estado=="Activo"){
+                            $("#botonDesactivarDirectivo").show();
+                            $("#botonActivarDirectivo").hide();
+                        }else if(record.Estado=="Inactivo"){
+                            $("#botonDesactivarDirectivo").hide();
+                            $("#botonActivarDirectivo").show();
+                        }
+                                                
+                    }
+    });
+
+    // Boton Activar / Desactivar Junta Directiva
+    $(".estadoJunta").click(function(){
+        var tabla = $("#tablaAdminJunta").data("kendoGrid");
+        var fila = tabla.dataSource.getByUid(tabla.select().data("uid"));
+        var Estado = $(this).attr("funcion");
+        var idSocio = fila.idSocio;
+        
+        $.ajax({
+            url:"Socios/cambiarEstadoJunta",
+            type:"POST",
+            data:{ idSocio : idSocio , Estado : Estado },
+            success: function(){
+                $("#tablaAdminJunta").data("kendoGrid").dataSource.read();
+            },
+            async: false
+         });
     });
 
     // Funcion para comprobar campos vacios
@@ -304,6 +360,18 @@
         });   
         return noHayErrores;    
     }
+
+    // Sincronizacion de Estado de Socios
+    $("#botonSincronizarEstados").click(function(){
+        $.ajax({
+            url:"Socios/sincronizarEstadoSocio",
+            type:"POST",
+            async:false,
+            success:function(){
+                $("#tablaAdminSocios").data("kendoGrid").dataSource.read();
+            }
+        });
+    });
 
     // Boton de Ascender usuario a JD
     $("#botonAscenderJD").click(function () {
@@ -320,7 +388,7 @@
             type: "POST",
             data: { idSocio: idSocio, cargoDirectivo: cargoDirectivo},
             success: function () {
-
+                $("#tablaAdminJunta").data("kendoGrid").dataSource.read();
             },
             async: false
         });
@@ -384,7 +452,7 @@
                     type:"POST",
                     data: aEnviar,
                     success: function(){
-                        alert("fin");
+                        
                         $("#tablaAdminSocios").data("kendoGrid").dataSource.read();
                         ventanaEditar.close();
                     },
@@ -430,12 +498,18 @@
                 });
                 
                 aEnviar["ConfirmPassword"] = $("#nuevoPassword").val();
+                
+                if(aEnviar["FechaBaja"]=="")
+                    aEnviar["FechaBaja"] = "Nada";
 
                 $.ajax({
                     url:"Socios/insertarSocio",
                     type:"POST",
                     data: aEnviar,
                     success: function(){
+                        $("#ventanaNuevoSocio").data("kendoWindow").close();                       
+                        $("#tablaAdminSocios").data("kendoGrid").dataSource.read();                        
+                        
                     },
                     async:false
                 });
@@ -448,8 +522,6 @@
         $(".tabsSocios").kendoTabStrip();
 
         // Combo para mostrar Cargos
-
-
 
         $("#pagados_" + e.data.idSocio).kendoGrid({
             dataSource: {
@@ -749,7 +821,7 @@
     }
    
 
-    $("#comboCargo").kendoDropDownList({
+    $(".comboCargo").kendoDropDownList({
                 dataSource: {
                     transport: {
                         type: "json",
@@ -766,16 +838,40 @@
         });
     
 
+    $("#cambiarCargo").click(function(){
+        
+        var tabla = $("#tablaAdminJunta").data("kendoGrid");
+        var seleccionado = tabla.select();
+        var filaJson = tabla.dataItem(seleccionado).toJSON();      // La pasamos a JSON                
+
+        var dataSource = tabla.dataSource;
+        
+        var idSocio = dataSource.getByUid(seleccionado.attr("data-uid")).idSocio;
+        var Cargo = $("#comboCargoJunta").data("kendoDropDownList").value();
+        
+        $.ajax({
+            url: "Socios/cambiarCargo",
+            type:"POST",
+            data: { idSocio : idSocio , Cargo : Cargo },
+            success: function(){
+                tabla.dataSource.read();
+            },
+            async: false
+        });
+    });
+    
+
     // ZONA PARA QTIPS
 
 
     setTimeout(cargarQTipsAdminSocios, 1000);
 
     function cargarQTipsAdminSocios() {
+      
 
         $(".botonCambiarEstadoCuota").qtip({
             content: {
-                text: "Al cambiar el estado de la cuota a <i>pagada</i>, la factura asociada tambien cambiara.<br>Automaticamente, si la fecha de Expiracion es mayor que la actual, se cambiara el estado del Socio a <b>Activo</b>"
+                text: "<h4>Al cambiar el estado de la cuota a <i>pagada</i>, la factura asociada tambien cambiara.<br><br>Automaticamente, si la fecha de Expiracion es mayor que la actual, se cambiara el estado del Socio a <b>Activo</b></h4>"
             },
             position: {
                 my: "top left"
@@ -784,7 +880,7 @@
 
         $("#botonAscenderJD").qtip({
             content: {
-                text: "Selecciona una fila de la tabla y un cargo a la derecha y pulse este boton.<br>Una vez lo hagas, el Socio pasara a ser parte de la <b>Junta Directiva</b><br>Para descender al Socio de la Junta Directiva, vaya a la tabla de abajo."
+                text: "<h4>Selecciona una fila de la tabla y un cargo a la derecha y pulse este boton.<br><br>Una vez lo hagas, el Socio pasara a ser parte de la <b>Junta Directiva</b><br><br>Para descender al Socio de la Junta Directiva, vaya a la tabla de abajo.</h4>"
             },
             position: {
                 my: "top left"
@@ -793,7 +889,7 @@
 
         $(".comboCargo").qtip({
             content: {
-                text: "Selecciona un cargo de este combo y pulse el boton de la izquierda para convertir el Socio en un cargo de la <b>Junta Directiva</b>."
+                text: "<h4>Selecciona un cargo de este combo y pulse el boton de la izquierda para convertir el Socio en un cargo de la <b>Junta Directiva</b>.</h4>"
             },
             position: {
                 my: "top left"
@@ -818,6 +914,18 @@
             }
         });
 
+        $("#botonSincronizarEstados").qtip({
+            content: {
+                text: "<center><h2>Sincronizacion de Socios</h2><br><img src='../../Content/iconos/syncsocios.png' /><br></center><h4>Al pulsar este boton el Sistema comprobara la <i>Fecha Actual</i> con la <i>Fecha de Expiracion</i>.<br><br>Si la <i>Fecha de Expiracion</i> es <u>menor</u> que la <i>Fecha Actual</i> pasara a estado <b>Inactivo</b> y si es al contrario, pasara a estado <b>Activo</h4></b>."
+            },
+            position: {
+                my: "top left"
+            }
+        });
+
     }
+
+    // Cargamos la pestaña de Cuotas y Descuentos
+     $.getScript("Scripts/jsactions/Administracion/Socios/cuotasdescuento.js");   
 
 });

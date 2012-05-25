@@ -117,7 +117,7 @@ namespace TortolasProject.Controllers
                     };
                     AccountRepo.registro(nuevoUsuario);
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
-                    return "ok";
+                    return nuevoUsuario.idUsuario.ToString();
                 }
                 else
                 {
@@ -131,6 +131,54 @@ namespace TortolasProject.Controllers
             return "Error en modelo";
         }
 
+        [HttpPost]
+        public String RegistroInterno(FormCollection data)
+        {
+            string user = data["UserName"];
+            string pass = data["Password"];
+            string email = data["Email"];
+            string cpass = data["ConfirmPassword"];
+
+            RegisterModel model = new RegisterModel
+            {
+                UserName = user,
+                Password = pass,
+                Email = email,
+                ConfirmPassword = cpass
+            };
+            if (ModelState.IsValid)
+            {
+                // Intento de registrar al usuario
+                MembershipCreateStatus createStatus;
+                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
+
+                if (createStatus == MembershipCreateStatus.Success)
+                {
+                    mtbMalagaDataContext db = new mtbMalagaDataContext();
+
+                    aspnet_Users u = db.aspnet_Users.Where(usuario => usuario.UserName == model.UserName).Single();
+                    tbUsuario nuevoUsuario = new tbUsuario
+                    {
+                        Nickname = u.UserName,
+                        idUsuario = Guid.NewGuid(),
+                        FKUser = u.UserId,
+                        Email = model.Email
+                    };
+                    AccountRepo.registro(nuevoUsuario);
+                 
+                    return nuevoUsuario.idUsuario.ToString("B");                    
+                }
+                else
+                {
+                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
+                    return ErrorCodeToString(createStatus);
+                }
+            }
+
+
+            // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
+           return "Error en modelo";
+        }
 
         public static Guid obtenerUserIdActual()
         {

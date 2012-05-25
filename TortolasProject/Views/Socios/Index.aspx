@@ -8,6 +8,22 @@
 
     <img src="../../Content/images/tituloadminsocios.png" />
     <br />
+
+    <div id="tabsAdminJunta">
+        <ul>
+            <li class="k-state-active">
+                <img src="../../Content/iconos/Lime-Dossier.png" width="20" height="20"/> Socios & Junta Directiva
+            </li>
+            <li>
+                <img src="../../Content/iconos/money.png" width="20" height="20"/> Cuotas y Descuentos
+            </li>
+        </ul>
+        
+    <!-- TAB PARA ADMINISTRACION DE SOCIOS Y JUNTA DIRECTIVA -->
+    <div class="pestana" id="sociosjunta">
+    <br />
+        <img src="../../Content/images/tituloinneradminsocios.png" />
+    <br />
     <h1>Socios</h1>
     <hr />
     <div id="tablaAdminSocios"></div>
@@ -15,7 +31,7 @@
     <br />
     <h1>Junta Directiva</h1>
     <hr />
-    <div id="tablaJuntaDirectiva"></div>
+    <div id="tablaAdminJunta"></div>
 
     <div class="ventana" id="ventanaNuevoSocio">
         <div class="ventanaWrapper">
@@ -36,6 +52,9 @@
                 <label for="nuevoApellidos">Apellidos : </label><input type="text" class="k-textbox necesario" placeholder="Apellidos del Socio" atributo="Apellidos" id="nuevoApellidos"/><br />
                 <label for="nuevoFechaAlta">Fecha Alta : </label><input type="text" class="k-textbox date necesario" placeholder="Fecha Alta del Socio" atributo="FechaAlta"  id="nuevoFechaAlta"/><br />
                 <label for="nuevoFechaExpiracion">Fecha Expiracion : </label><input type="text" class="k-textbox date necesario" placeholder="Fecha Expiracion del Socio" atributo="FechaExpiracion" id="nuevoFechaExpiracion"/><br />                
+                <div id="fechaBaja">
+                    <label for="nuevoFechaBaja">Fecha Baja : </label><input type="text" class="k-textbox date" placeholder="Fecha Baja del Socio" atributo="FechaBaja" id="nuevoFechaBaja" /><br />
+                </div>
                 <label for="nuevoEstado">Estado : </label><input type="text" class="k-textbox comboEstado" placeholder="Estado del Socio" atributo="Estado" id="nuevoEstado"/><br />
                 <br />
             </div>
@@ -66,6 +85,39 @@
             <input type="button" id="botonEditarSocio" class="k-button" value="Editar Socio"  /><input type="button" id="botonCancelarEdicion" class="k-button" value="Cancelar" />
         </div>
     </div>
+
+    </div>
+
+    <!-- TAB DE DESCUENTOS Y CUOTAS DE SOCIOS -->
+    <div class="pestana" id="cuotasdescuento">
+        <br />
+        <center><img src="../../Content/images/titulocuotas.png" /></center><br />
+        <h1>Cuotas</h1>
+        <hr />
+        <div class="cuotasWrapper">
+            <table border="0">
+                <tr>
+                    <td><div class="tablaCuotas" id="tablaCuotas"></div></td>
+                    <td><center><h3>Descuento por meses</h3></center>
+                            Este es un tipo de Descuento para aquellos Socios que decidan hacer un pago de cuota largo, benificiarlos con un descuento.    <br />                        
+                    <div class="tablaCuotas" id="tablaDescCuotas"  ></div>       </td>
+                </tr>
+            </table>
+                           
+        </div>
+        <br /><br />
+        <h1>Descuentos de Socios</h1>
+        <hr /><br />
+        <p style="margin: 10px 15px 10px 15px">
+            Existen dos descuentos dentro de la Asociación, acumulativos. El primero es por el hecho de ser Socio recibe un descuento fijo en todos los productos 
+            y el segundo es para premiar la antiguedad del Socio.
+        </p>
+        <br />
+        <div id="tablaDescuentoSocio"></div>
+        <br />
+    </div>
+
+    </div>
     
 </asp:Content>
 
@@ -80,15 +132,45 @@
          <input type="button" class="k-button botonCambiarEstadoCuota"  value="Cambiar estado de Cuota">
     </script>
 
+    <script type="text/x-kendo-template" id="templateToolbarAdminCuotas">
+         <input type="button" class="k-button" id="cambiarPrecioCuota" value="Cambiar Precio">
+         <input type="text" class="k-textbox numericCuota" id="numericCuota">
+    </script>
+
+    <script type="text/x-kendo-template" id="templateToolbarDescuentoSocios">
+         <input type="button" class="k-button" id="botonModificarDescuentoSocio" value="Modificar Descuento Socio" style="float:left" >
+         <input type="text" class="k-textbox" id="numericCantidad" >
+         <input type="text" class="k-textbox" id="numericAnnos"  >
+         <input type="button" class="k-button" id="botonSincronizarAntiguedad" value="Sincronizar Antigüedad" style="float:right" >
+    </script>
+
+    <script type="text/x-kendo-template" id="templateToolbarAdminDescCuotas">
+         <input type="button" class="k-button" id="cambiarPrecioDescCuota" value="Modificar">
+         <input type="text" class="k-textbox numeric Desc" id="numericDescCuota">
+         <input type="text" class="k-textbox comboTipoDesc Desc" id="comboTipoDesc">
+         <input type="text" class="k-textbox numericMeses Desc" id="numericMeses">         
+    </script>
+    
     <script type="text/x-kendo-template" id="templateToolbarAdminSocio">        
              
              <div class="toolbarIzq">
-                <input type="button" class="k-button" id="botonCrearSocio" value="+ Nuevo Socio">                
+                <input type="button" class="k-button" id="botonCrearSocio" value="+ Nuevo Socio">
+                <input type="button" class="k-button" id="botonSincronizarEstados" value="Sincronizar Estados Socio">               
              </div>
              <div class="toolbarDer">
                 <input type="button" class="k-button" id="botonAscenderJD" value="Ascender a Junta Directiva">
                 <input type="text" class="comboCargo" id="comboCargo">                                             
              </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="templateToolbarAdminJunta">        
+                          
+                <input type="button" class="k-button estadoJunta" id="botonActivarDirectivo" funcion="Activo" value="Activar Directivo">
+                <input type="button" class="k-button estadoJunta" id="botonDesactivarDirectivo" funcion="Inactivo" value="Desactivar Directivo">
+                <div class="toolbarDer">
+                    <input type="button" class="k-button" id="cambiarCargo" value="Cambiar Cargo">
+                    <input type="text" class="comboCargo" id="comboCargoJunta" >                    
+                </div>
     </script>
 
     <script type="text/x-kendo-template" id="templateDetailAdminSocio">

@@ -149,7 +149,8 @@ namespace TortolasProject.Controllers.Usuarios
                 FechaAlta = hoy,
                 FechaExpiracion = FechaExpiracion,
                 NumeroSocio = NumeroSocio, 
-                FKUsuario = idUsuario
+                FKUsuario = idUsuario,
+                FKDescuento = Guid.Parse("fe3134e4-aea5-4f27-8740-68c6022db21c")
             };
 
             usuariosRepo.crearSocio(socio);

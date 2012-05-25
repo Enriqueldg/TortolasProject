@@ -68,6 +68,7 @@ namespace TortolasProject.Models.Repositorios
             socio.NumeroSocio = NumeroSocio;
             socio.FechaExpiracion = FechaExpiracion;
             socio.Estado = Estado;
+            socio.FechaAlta = FechaAlta;
 
             mtbMalagaDB.SubmitChanges();
         }
@@ -161,6 +162,16 @@ namespace TortolasProject.Models.Repositorios
             mtbMalagaDB.SubmitChanges();
         }
 
+        public void modificarDatosPersonalesUsuario(Guid Usuario, String Nombre, String Apellidos, String Email)
+        {
+            tbUsuario usu =  obtenerUsuario(Usuario);
+            usu.Nombre = Nombre;
+            usu.Apellidos = Apellidos;
+            usu.Email = Email;
+
+            mtbMalagaDB.SubmitChanges();
+        }
+
         public void cambiarEstadoSocio(Guid Socio , String Estado, String FechaExpiracion)
         {
             tbSocio socio = obtenerSocioById(Socio);
@@ -172,6 +183,39 @@ namespace TortolasProject.Models.Repositorios
             
             socio.Estado = Estado;
             mtbMalagaDB.SubmitChanges();
+        }
+
+        public void cambiarEstadoSocioDate(Guid Socio, String Estado, DateTime FechaExpiracion)
+        {
+            tbSocio socio = obtenerSocioById(Socio);
+            socio.FechaExpiracion = FechaExpiracion;
+            socio.Estado = Estado;
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public int obtenerAnnosAntiguedad()
+        {
+            return mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.Nombre.Equals("Antiguedad")).Single().Annos.Value;
+        }
+
+        public void cambiarAntiguedad(Guid idSocio, Boolean esAntiguo)
+        {
+            tbSocio socio = obtenerSocioById(idSocio);
+            if (esAntiguo)
+            {
+                socio.FKDescuento = mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.Nombre.Equals("Antiguedad")).Single().idDescuentoSocio;
+            }
+            else
+            {
+                socio.FKDescuento = mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.Nombre.Equals("Basico")).Single().idDescuentoSocio;
+            }
+
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public String nombreDescuentoSocio(Guid abuscar)
+        {
+            return mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.idDescuentoSocio.Equals(abuscar)).Single().Nombre;
         }
 
         public void crearCuota(tbCuota cuota)
@@ -210,6 +254,75 @@ namespace TortolasProject.Models.Repositorios
         public IList<tbJuntaDirectiva> obtenerJuntaDirectiva()
         {
             return mtbMalagaDB.tbJuntaDirectiva.ToList();
+        }
+
+        public tbCargoDirectivo CargoPorID(Guid Cargo)
+        {
+            return mtbMalagaDB.tbCargoDirectivo.Where(cargo => cargo.idCargoDirectivo.Equals(Cargo)).Single();
+        }
+
+        public tbJuntaDirectiva obtenerJuntaDirectivaByID(Guid idJunta)
+        {
+            return mtbMalagaDB.tbJuntaDirectiva.Where(junta => junta.FKSocio.Equals(idJunta)).Single();
+        }
+
+        public void cambiarEstadoJunta(Guid idSocio, String Estado)
+        {
+            tbJuntaDirectiva junta = mtbMalagaDB.tbJuntaDirectiva.Where(cargo => cargo.FKSocio.Equals(idSocio)).Single();
+
+            junta.Estado = Estado;
+
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public void cambiarCargoJunta(Guid Socio, Guid Cargo)
+        {
+            tbJuntaDirectiva junta = mtbMalagaDB.tbJuntaDirectiva.Where(jun => jun.FKSocio.Equals(Socio)).Single();
+            junta.FKCargoDirectivo = Cargo;
+
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public void cambiarCuota(Guid tipoCuota, int Precio)
+        {
+            tbTipoCuota cuota = mtbMalagaDB.tbTipoCuota.Where(cuoti => cuoti.idTipoCuota.Equals(tipoCuota)).Single();
+            cuota.Precio = Precio;
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public void cambiarDescCuota(Guid tipoCuota, int Precio, int Meses, String Tipo)
+        {
+            tbTipoCuota cuota = mtbMalagaDB.tbTipoCuota.Where(cuoti => cuoti.idTipoCuota.Equals(tipoCuota)).Single();
+            cuota.Precio = Precio;
+            cuota.Meses = Meses;
+            cuota.Tipo = Tipo;
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public IList<tbDescuentoSocio> listarDescuentoSocios()
+        {
+            return mtbMalagaDB.tbDescuentoSocio.ToList();
+        }
+
+        public tbDescuentoSocio obtenerDescuentoSocio(Guid abuscar)
+        {
+            return mtbMalagaDB.tbDescuentoSocio.Where(desc => desc.idDescuentoSocio.Equals(abuscar)).Single();
+        }
+
+        public void modificarDescuentoSocio(Guid DescuentoSocio, int Cantidad, int Annos)
+        {
+            tbDescuentoSocio descuento = obtenerDescuentoSocio(DescuentoSocio);
+
+            descuento.Cantidad = Cantidad;            
+            if(Annos.Equals(0))
+                descuento.Annos = Annos;
+
+            mtbMalagaDB.SubmitChanges();
+        }
+
+        public void sincronizarDescuentosAntiguedad()
+        {
+            
         }
     }
 }

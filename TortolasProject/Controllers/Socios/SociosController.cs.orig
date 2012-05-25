@@ -1,0 +1,328 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using TortolasProject.Models.Repositorios;
+using TortolasProject.Models;
+using TortolasProject.Controllers;
+
+namespace TortolasProject.Controllers.Socios
+{
+    public class SociosController : Controller
+    {
+        mtbMalagaDataContext mtbDB = new mtbMalagaDataContext();
+        UsuariosRepositorio usuariosRepo = new UsuariosRepositorio();
+        FacturasRepositorio facturasRepo = new FacturasRepositorio();
+        AccountController accountRepo = new AccountController();
+        
+       
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult obtenerSocios()
+        {
+            var socios = from s in usuariosRepo.listarSocios()
+                         select new
+                         {
+                             FechaExpiracion = s.FechaExpiracion.HasValue ? s.FechaExpiracion.Value.ToShortDateString() : "",
+                             FechaBaja = s.FechaBaja.HasValue ? s.FechaBaja.Value.ToShortDateString() : "",
+                             FechaAlta = s.FechaAlta.ToShortDateString(),
+                             Estado = s.Estado,
+                             Foto = s.Foto,
+                             FKUsuario = s.FKUsuario,
+                             idSocio = s.idSocio,
+                             Observaciones = s.Observaciones,
+                             NumeroSocio = s.NumeroSocio,
+                             MotivosBaja = s.MotivosBaja
+                         };
+            return Json(socios);
+        }
+        
+
+        [HttpPost]
+        public JsonResult obtenerSociosyUsuario()
+        {
+            
+            var SociosyUsuario = from societe in usuariosRepo.listarSocios()
+                                 select new
+                                 {
+                                     Estado = societe.Estado,
+                                     FechaAlta = societe.FechaAlta.ToShortDateString(),
+                                     FechaBaja = societe.FechaBaja.HasValue ? societe.FechaBaja.Value.ToShortDateString() : "",
+                                     FechaExpiracion = societe.FechaExpiracion.HasValue ?  societe.FechaExpiracion.Value.ToShortDateString() : "",
+                                     Foto = societe.Foto,
+                                     idSocio = societe.idSocio,
+                                     NumeroSocio = societe.NumeroSocio,
+                                     Observaciones = societe.Observaciones,
+                                     Nombre = usuariosRepo.obtenerUsuario(societe.FKUsuario).Nombre,
+                                     Apellidos = usuariosRepo.obtenerUsuario(societe.FKUsuario).Apellidos,
+                                     DescuentoSocio = usuariosRepo.nombreDescuentoSocio(societe.FKDescuento),
+                                     FKDescuentoSocio = societe.FKDescuento
+                                 };
+            return Json(SociosyUsuario);
+        }
+
+        [HttpPost]
+        public void crearSocio(tbSocio societe)
+        {
+            mtbDB.tbSocio.InsertOnSubmit(societe);
+            mtbDB.SubmitChanges();
+        }
+
+        [HttpPost]
+        public JsonResult obtenerPagosSocios(FormCollection data)
+        {
+            Guid idSocio = Guid.Parse(data["idSocio"]);
+            
+            var cuotas = from c in usuariosRepo.cuotasDeSocio(idSocio)
+                         select new
+                         {
+                             idCuota = c.idCuota,
+                             TipoCuota = mtbDB.tbTipoCuota.Where(tipoC => tipoC.idTipoCuota.Equals(c.FKTipoCuota)).Single().Nombre,
+                             Fecha = mtbDB.tbFactura.Where(factu => factu.idFactura.Equals(c.FKFactura)).Single().Fecha.ToShortDateString(),
+                             Concepto = mtbDB.tbFactura.Where(factu => factu.idFactura.Equals(c.FKFactura)).Single().Concepto,
+                             BaseImponible = mtbDB.tbFactura.Where(factu => factu.idFactura.Equals(c.FKFactura)).Single().BaseImponible,
+                             Total = mtbDB.tbFactura.Where(factu => factu.idFactura.Equals(c.FKFactura)).Single().Total,                             
+                             Estado = mtbDB.tbEstadoFactura.Where(estado => estado.idEstadoFactura.Equals(mtbDB.tbFactura.Where(factu => factu.idFactura.Equals(c.FKFactura)).Single().FKEstado)).Single().Nombre,
+                             FechaExpiracion = c.FechaExpiracion.ToShortDateString()
+                         };
+            return Json(cuotas);
+        }
+
+        [HttpPost]
+        public void pagarCuotaSocio(FormCollection data)
+        {
+            Guid idCuota = Guid.Parse(data["idCuota"]);
+            String FechaExpiracion = data["FechaExpiracion"];
+            Guid idSocio = Guid.Parse(data["idSocio"]);
+
+            tbCuota cuota = usuariosRepo.obtenerCuota(idCuota);
+            tbEstadoFactura pagado = mtbDB.tbEstadoFactura.Where(estadoF => estadoF.Nombre.Equals("Pagado")).Single();
+            facturasRepo.setEstadoFactura(pagado, cuota.FKFactura);
+
+            if(DateTime.Today.CompareTo(DateTime.Parse(FechaExpiracion)).Equals(-1))
+                usuariosRepo.cambiarEstadoSocio(idSocio, "Activo", FechaExpiracion);
+        }
+
+        [HttpPost]
+        public void ascenderJuntaDirectiva(FormCollection data)
+        {
+            Guid idSocio = Guid.Parse(data["idSocio"]);
+            Guid Cargo = Guid.Parse(data["cargoDirectivo"]);
+
+            if (usuariosRepo.esJuntaDirectiva(idSocio).Equals(false))
+                usuariosRepo.crearJuntaDirectiva(idSocio, Cargo);
+        }
+
+        [HttpPost]
+        public JsonResult cargosDirectivos()
+        {
+            var cargos = from c in usuariosRepo.obtenerTodosCargos()
+                         select new
+                         {
+                             idCargoDirectivo = c.idCargoDirectivo,
+                             Nombre = c.Nombre                             
+                         };
+
+            return Json(cargos);
+        }
+
+        [HttpPost]
+        public void insertarSocio(FormCollection data)
+        {
+            // Creamos el Usuario ASP NET y el tbUsuario
+            HomeController home = new HomeController();
+            Guid idUsuario =Guid.Parse(home.RegistroInterno(data));
+         
+            // Modificamos los datos personales
+            usuariosRepo.modificarDatosPersonalesUsuario(idUsuario, data["Nombre"], data["Apellidos"], data["Email"]);                        
+
+            // Detectamos si ha escrito la Fecha de Baja y creamos el Socio
+            if (data["FechaBaja"].Equals("Nada"))
+            {
+
+                // Creamos el Socio
+                tbSocio socio = new tbSocio
+                {
+                    idSocio = Guid.NewGuid(),
+                    FechaExpiracion = DateTime.Parse(data["FechaExpiracion"]),
+                    FechaAlta = DateTime.Parse(data["FechaAlta"]),
+                    Estado = data["Estado"],
+                    FKUsuario = idUsuario,
+                    NumeroSocio = int.Parse(data["NumeroSocio"]),
+                    FKDescuento = Guid.Parse("fe3134e4-aea5-4f27-8740-68c6022db21c")
+                    
+                };
+                mtbDB.tbSocio.InsertOnSubmit(socio);
+            }
+            else
+            {
+                // Creamos el Socio
+                tbSocio socio = new tbSocio
+                {
+                    idSocio = Guid.NewGuid(),
+                    FechaExpiracion = DateTime.Parse(data["FechaExpiracion"]),
+                    FechaAlta = DateTime.Parse(data["FechaAlta"]),
+                    Estado = data["Estado"],
+                    FKUsuario = idUsuario,
+                    NumeroSocio = int.Parse(data["NumeroSocio"]),
+                    FKDescuento = Guid.Parse("fe3134e4-aea5-4f27-8740-68c6022db21c"),
+                    FechaBaja = DateTime.Parse(data["FechaBaja"])
+                };
+                mtbDB.tbSocio.InsertOnSubmit(socio);
+            }
+
+            mtbDB.SubmitChanges();
+        }
+
+        [HttpPost]
+        public void editarSocio(FormCollection data)
+        {
+            Guid idSocio = Guid.Parse(data["idSocio"]);
+            int NumeroSocio = int.Parse(data["NumeroSocio"]);
+            DateTime FechaExpiracion = DateTime.Parse(data["FechaExpiracion"]);
+            DateTime FechaAlta = DateTime.Parse(data["FechaAlta"]);
+            String Estado = data["Estado"];
+
+            usuariosRepo.actualizarNombreApellidosUsuario(usuariosRepo.obtenerUsuarioBySocio(idSocio).idUsuario, data["Nombre"], data["Apellidos"]);
+            usuariosRepo.actualizarSocio(idSocio, NumeroSocio, FechaExpiracion, FechaAlta, data["FechaBaja"], Estado);            
+            
+        }
+
+        [HttpPost]
+        public JsonResult obtenerJuntaDirectiva()
+        {
+            var JuntaDirectiva = from j in usuariosRepo.obtenerJuntaDirectiva()
+                                 select new
+                                 {
+                                     FKCargoDirectivo = j.FKCargoDirectivo,
+                                     Estado = j.Estado,
+                                     idSocio = j.FKSocio,
+                                     Nombre = usuariosRepo.obtenerUsuarioBySocio(j.FKSocio).Nombre,
+                                     Apellidos = usuariosRepo.obtenerUsuarioBySocio(j.FKSocio).Apellidos,
+                                     Email = usuariosRepo.obtenerUsuarioBySocio(j.FKSocio).Email,
+                                     NumeroSocio = usuariosRepo.obtenerSocioById(j.FKSocio).NumeroSocio,
+                                     Cargo = usuariosRepo.CargoPorID(j.FKCargoDirectivo).Nombre
+                                 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 18a79459df91f18ef8d4ce6cba767b9d993cf2ee
+            return Json(JuntaDirectiva);
+        }
+
+        [HttpPost]
+        public void cambiarEstadoJunta(FormCollection data)
+        {
+            Guid idSocio = Guid.Parse(data["idSocio"]);
+            String Estado = data["Estado"];
+
+            usuariosRepo.cambiarEstadoJunta(idSocio, Estado);
+        }
+
+        [HttpPost]
+        public void cambiarCargo(FormCollection data)
+        {
+            Guid idSocio = Guid.Parse(data["idSocio"]);
+            Guid Cargo = Guid.Parse(data["Cargo"]);
+
+            usuariosRepo.cambiarCargoJunta(idSocio, Cargo);
+        }
+
+        [HttpPost]
+        public JsonResult administrarCuotas(FormCollection data)
+        {
+
+            var cuotas = from u in usuariosRepo.obtenerCuotas().Where(cuot => cuot.Clase.Equals(data["clase"]))
+                         select new {
+                            idTipoCuota = u.idTipoCuota,
+                            Meses = u.Meses,
+                            Nombre = u.Nombre,
+                            Precio = u.Precio,
+                            Tipo = u.Tipo
+                         };
+
+            return Json(cuotas);
+        }
+
+        [HttpPost]
+        public void cambiarCuota(FormCollection data)
+        {
+            Guid tipoCuota = Guid.Parse(data["idTipoCuota"]);
+            int Precio = int.Parse(data["Precio"]);
+            
+            if(data["clase"].Equals("Cuota"))
+                usuariosRepo.cambiarCuota(tipoCuota, Precio);
+            else{
+                int Meses = int.Parse(data["Meses"]);
+                String Tipo = data["Tipo"];
+                usuariosRepo.cambiarDescCuota(tipoCuota,Precio,Meses,Tipo);
+            }
+
+        }
+
+        [HttpPost]
+        public JsonResult administrarDescuentosSocio()
+        {
+            var descuento = from d in usuariosRepo.listarDescuentoSocios()
+                            select new
+                            {
+                                idDescuentoSocio = d.idDescuentoSocio,
+                                Nombre = d.Nombre,
+                                Observaciones =  d.Observaciones,
+                                Cantidad = d.Cantidad,
+                                Annos = d.Annos
+                            };
+            return Json(descuento);
+        }
+
+        [HttpPost]
+        public void modificarDescuentoSocio(FormCollection data)
+        {
+            Guid idDescuentoSocio = Guid.Parse(data["idDescuentoSocio"]);
+            int Cantidad = int.Parse(data["Cantidad"]);
+            int Annos = int.Parse(data["Annos"]);
+
+            usuariosRepo.modificarDescuentoSocio(idDescuentoSocio,Cantidad,Annos);
+        }
+
+        // Funcion para sincronizar los estados de los Socios : Activo / Inactivo segun la fecha de hoy y la suya de expiracion
+        [HttpPost]
+        public void sincronizarEstadoSocio()
+        {
+            
+            foreach (tbSocio socio in usuariosRepo.listarSocios())
+            {
+                if (socio.FechaExpiracion.HasValue)
+                {
+                    if (socio.FechaExpiracion.Value.CompareTo(DateTime.Today).Equals(-1))
+                        usuariosRepo.cambiarEstadoSocio(socio.idSocio, "Inactivo", socio.FechaExpiracion.HasValue ? socio.FechaExpiracion.Value.ToShortDateString() : "");
+                    else
+                        usuariosRepo.cambiarEstadoSocio(socio.idSocio, "Activo", socio.FechaExpiracion.HasValue ? socio.FechaExpiracion.Value.ToShortDateString() : "");
+                }
+            }
+            
+        }
+
+        [HttpPost]
+        public void sincronizarSociosAntiguedad()
+        {
+            int Annos = usuariosRepo.obtenerAnnosAntiguedad();
+            foreach (tbSocio socio in usuariosRepo.listarSocios())
+            {
+               
+                TimeSpan ts = DateTime.Today - socio.FechaAlta;
+
+                if (Annos.CompareTo(ts.Days * 365).Equals(-1))
+                    usuariosRepo.cambiarAntiguedad(socio.idSocio, true);
+                else
+                    usuariosRepo.cambiarAntiguedad(socio.idSocio, false);
+            }
+        }
+
+    }
+}
