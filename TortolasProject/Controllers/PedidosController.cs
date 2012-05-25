@@ -218,7 +218,7 @@ namespace TortolasProject.Controllers
         {
             Guid id = Guid.Parse(data["idPedidoUsuario"]);
             tbPedidoUsuario p = PedidosRepo.getPedidoUsuarioById(id);
-            Guid idFactura = Guid.NewGuid()
+            Guid idFactura = Guid.NewGuid();
             tbFactura f = new tbFactura
             {
                 idFactura = idFactura,
@@ -255,7 +255,7 @@ namespace TortolasProject.Controllers
             if (!UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).Equals(default))
             {
                 tbSocio socio = UsuariosRepo.obtenerSocio(UsuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).idUsuario);
-                foreach(tbDescuentoSocio ds in UsuariosRepo.listarDescuentosSocio())
+                foreach(tbDescuentoSocio ds in UsuariosRepo.obtenerDescuentoSocio())
                 {
                     if(ds.Nombre.Equals("Basico")) 
                     {
@@ -285,6 +285,7 @@ namespace TortolasProject.Controllers
                             };
                             lineasFactura.Add(linea);
                         }
+                    }
 
                 }
 
