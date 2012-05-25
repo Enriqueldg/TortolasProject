@@ -52,6 +52,14 @@ namespace TortolasProject.Controllers.Usuarios
             return Json(usuarios);
         }
 
+        [HttpPost]
+        public JsonResult usuarioLogueado()
+        {
+            var usuario = new {
+                                    Usuario = usuariosRepo.obtenerUsuarioNoAsp(HomeController.obtenerUserIdActual()).idUsuario
+                              };
+            return Json(usuario);
+        }
 
         [HttpPost]
         public JsonResult socioDeUsuario(FormCollection data)

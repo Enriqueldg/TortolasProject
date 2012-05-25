@@ -112,6 +112,22 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Informes\DataSetFacturacion.cs">
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\DataSetFacturacion.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Informes\facturacion.aspx.cs">
+      <DependentUpon>facturacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Informes\facturacion.aspx.designer.cs">
+      <DependentUpon>facturacion.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Movimiento.cs" />
     <Compile Include="Models\mtbMalaga.designer.cs">
@@ -507,6 +523,7 @@
     <Content Include="Rotativa\mingwm10.dll" />
     <Content Include="Rotativa\README.txt" />
     <Content Include="Rotativa\ssleay32.dll" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.af.min.js" />
@@ -1034,7 +1051,6 @@
     <Content Include="Views\Facturas\graficosContables.aspx" />
     <Content Include="Views\Cursillos\Index.aspx" />
     <Content Include="Views\Cursillos\VistaCrearCursillo.ascx" />
-    <Content Include="Views\Facturas\informesContables.aspx" />
     <Content Include="Views\Facturas\Old\editarFactura.aspx" />
     <Content Include="Views\Facturas\Old\leerFactura.aspx" />
     <Content Include="Views\Articulos\AnadirArticulo.ascx" />
@@ -1114,6 +1130,25 @@
     <Content Include="Content\iconos\Office-Chairs-png.zip" />
     <Content Include="Content\iconos\office_space_png.zip" />
 >>>>>>> 18a79459df91f18ef8d4ce6cba767b9d993cf2ee
+    <None Include="Informes\DataSetFacturacion.xsc">
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+    </None>
+    <None Include="Informes\DataSetFacturacion.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetFacturacion.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Informes\DataSetFacturacion.xss">
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+    </None>
+=======
+    <Content Include="Content\iconos\desktop-business-icons-PNG.zip" />
+    <Content Include="Content\iconos\Dossier-png.zip" />
+    <Content Include="Content\iconos\Financial-Accounting-png.zip" />
+    <Content Include="Content\iconos\iWork10-png.zip" />
+    <Content Include="Content\iconos\Office-Chairs-png.zip" />
+    <Content Include="Content\iconos\office_space_png.zip" />
+>>>>>>> 18a79459df91f18ef8d4ce6cba767b9d993cf2ee
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
@@ -1130,6 +1165,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Informes\facturacion.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>facturacion.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Informes\facturacion.resx">
+      <DependentUpon>facturacion.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Informes\facturacion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>facturacion.cs</LastGenOutput>

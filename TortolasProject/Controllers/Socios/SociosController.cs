@@ -313,13 +313,14 @@ namespace TortolasProject.Controllers.Socios
             {
                
                 TimeSpan ts = DateTime.Today - socio.FechaAlta;
-
-                if (Annos.CompareTo(ts.Days * 365).Equals(-1))
+                int AnnosSocio = ((ts.Days)/30)/12;
+                if (Annos.CompareTo(AnnosSocio).Equals(-1))
                     usuariosRepo.cambiarAntiguedad(socio.idSocio, true);
                 else
                     usuariosRepo.cambiarAntiguedad(socio.idSocio, false);
             }
-        }
+        }       
+
 
     }
 }

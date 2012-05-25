@@ -3,13 +3,19 @@
     position:relative;
     float:left;
     width:inherit;
+    margin-bottom:20px;
 }
 #pdfButton
 {
     position:relative;
     float:right;
 }
-    
+#relacionesButton
+{
+    position:relative;
+    float:right;
+    margin-right:5px;
+}
 #facturaDetalles
 {
     display:block;
@@ -46,15 +52,17 @@
 {
     position:relative;
     float:left;
+    cursor:pointer;
     font-weight:bold;
+    border: 1px solid white;
 }
-#relacionesExistentesDiv:hover
+#relacionesExistentesDiv #quitarRelacionButton:hover
 {
     position:relative;
     float:left;
     font-weight:bold;
-    background-color:#E3E3E3;
-    cursor:pointer;
+    border: 1px solid gray;
+    
 }
 #conceptoFacturaDiv
 {
@@ -113,4 +121,16 @@
     float:right;
     color:White;
     font-weight:bold;
+}
+#lineaFacturaWindowBottom
+{
+    margin-top:20px;
+}
+#tablaNuevaLineaFactura
+{
+    width:600px;
+}
+#tablaNuevaLineaFactura th
+{
+    width:200px;
 }

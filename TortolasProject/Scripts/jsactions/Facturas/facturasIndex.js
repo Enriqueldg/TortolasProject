@@ -386,6 +386,78 @@ function datosVentana() {
         pageable: true
     });
 
+    // GRID proveedores
+    dsProveedores = new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: "../../../Facturas/proveedoresListado",
+                dataType: "json",
+                type: "POST"
+            }
+        },
+        pageSize:numeroFilas
+    });
+
+    $("#proveedoresGrid").kendoGrid({
+        dataSource: dsProveedores,
+        columns: [
+            {
+                field: "Nombre",
+                title: "Nombre"
+            },
+            { field: "Mercado",
+                title: "Mercado"
+            },
+            {
+                field: "Direccion",
+                title: "Dirección"
+            }
+        ],
+        selectable: true,
+        filterable: true,
+        pageable: true
+    });
+
+    // GRID contratos
+    dsContratos = new kendo.data.DataSource({
+        transport: {
+            read: {
+                url: "../../../Facturas/contratosListado",
+                dataType: "json",
+                type: "POST"
+            }
+        },
+        pageSize: numeroFilas
+    });
+
+    $("#contratosGrid").kendoGrid({
+        dataSource: dsContratos,
+        columns: [
+            {
+                field: "NombreEmpresa",
+                title: "Empresa"
+            },
+            { field: "Descripcion",
+                title: "Descripción"
+            },
+            {
+                field: "FechaCreacion",
+                title: "Fecha creación"
+            },
+            {
+                field: "FechaCaducidad",
+                title: "Fecha caducidad"
+            },
+            {
+                field: "Importe",
+                title: "Importe"
+            }
+        ],
+        selectable: true,
+        filterable: true,
+        pageable: true
+    });
+
     $("#fechaInicial").kendoDatePicker({
         start: "day",
         depth: "year",

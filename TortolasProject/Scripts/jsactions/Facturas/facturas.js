@@ -51,6 +51,7 @@ function estadoNuevaFactura() {
     // Ocultar botón poli
     $("#poliButton").hide();
     $("#eliminarButton").hide();
+    $("#pdfButton").hide();
     
 
     // DatePicker fecha
@@ -90,6 +91,7 @@ function estadoDetallesFactura() {
     $("#conceptoFactura").hide();
     $("#estadoFacturaDropDownList").hide();
     $("#estadoFacturaDropDownListContainer").hide();
+    $("#pdfButton").show();
 
 
     // Mostrar campos
@@ -170,6 +172,7 @@ function estadoDetallesFactura() {
      estadoPagina = "editar";
      $("#estadoPage").val(estadoPagina);
      actualizarTotal(BaseImponible,Total);
+     $("#pdfButton").hide();
 
     $("#volverButton").show();
     $("#poliButton").hide();
@@ -586,7 +589,7 @@ function inicializar() {
 /* ##############   VENTANA ########################################################################## */
 function datosVentana() {
     // Window Relaciones    
-
+    var numeroFilas = 8;
     $("#relacionesButton").click(function () {
         w = $("#relacionesWindow").data("kendoWindow");
         w.center();
@@ -594,7 +597,7 @@ function datosVentana() {
     });
 
     $("#relacionesWindow").kendoWindow({
-        width: "600px",
+        width: "890px",
         title: "Relaciones",
         visible: false,
         modal: true
@@ -613,7 +616,8 @@ function datosVentana() {
                 dataType: "json",
                 type: "POST"
             }
-        }
+        },
+        pageSize: numeroFilas
     });
 
     $("#usuariosFacturaGrid").kendoGrid({
@@ -625,7 +629,8 @@ function datosVentana() {
                 }
             ],
         selectable: true,
-        filterable: true
+        filterable: true,
+        pageable: true
     });
 
     // GRID eventos
@@ -636,7 +641,8 @@ function datosVentana() {
                 dataType: "json",
                 type: "POST"
             }
-        }
+        },
+        pageSize: numeroFilas
     });
 
     $("#eventosFacturaGrid").kendoGrid({
@@ -656,7 +662,8 @@ function datosVentana() {
                 }
             ],
         selectable: true,
-        filterable: true
+        filterable: true,
+        pageable: true
     });
 
     // GRID cursillos
@@ -667,7 +674,8 @@ function datosVentana() {
                 dataType: "json",
                 type: "POST"
             }
-        }
+        },
+        pageSize: numeroFilas
     });
 
     $("#cursillosFacturaGrid").kendoGrid({
@@ -687,7 +695,8 @@ function datosVentana() {
                 }
             ],
         selectable: true,
-        filterable: true
+        filterable: true,
+        pageable: true
     });
 
     // GRID pedidos globales
@@ -698,7 +707,8 @@ function datosVentana() {
                 dataType: "json",
                 type: "POST"
             }
-        }
+        },
+        pageSize: numeroFilas
 
     });
     $("#pedidosGlobalesGrid").kendoGrid({
@@ -714,7 +724,8 @@ function datosVentana() {
                 }
             ],
         selectable: true,
-        filterable: true
+        filterable: true,
+        pageable: true
     });
 
     // GRID pedidos usuario
@@ -725,7 +736,8 @@ function datosVentana() {
                 dataType: "json",
                 type: "POST"
             }
-        }
+        },
+        pageSize: numeroFilas
 
     });
     $("#pedidosUsuarioGrid").kendoGrid({
@@ -741,7 +753,8 @@ function datosVentana() {
                 }
             ],
         selectable: true,
-        filterable: true
+        filterable: true,
+        pageable: true
     });
 
    
@@ -754,7 +767,8 @@ function datosVentana() {
                     dataType: "json",
                     type: "POST"
                 }
-            }
+            },
+            pageSize: numeroFilas
         });
 
         $("#empresasGrid").kendoGrid({
@@ -764,7 +778,8 @@ function datosVentana() {
                 field: "Nombre",
                 title: "Nombre"
             },
-            { field: "CIF",
+            { 
+                field: "CIF",
                 title: "CIF"
             },
             {
@@ -780,7 +795,81 @@ function datosVentana() {
                 title: "Telefono"
             }
         ],
-            selectable: true
+        selectable: true,
+        filterable: true,
+        pageable: true
+        });
+
+        // GRID proveedores
+        dsProveedores = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "../../../Facturas/proveedoresListado",
+                    dataType: "json",
+                    type: "POST"
+                }
+            },
+            pageSize: numeroFilas
+        });
+
+        $("#proveedoresGrid").kendoGrid({
+            dataSource: dsProveedores,
+            columns: [
+            {
+                field: "Nombre",
+                title: "Nombre"
+            },
+            { field: "Mercado",
+                title: "Mercado"
+            },
+            {
+                field: "Direccion",
+                title: "Dirección"
+            }
+            ],
+            selectable: true,
+            filterable: true,
+            pageable: true
+        });
+
+        // GRID contratos
+        dsContratos = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "../../../Facturas/contratosListado",
+                    dataType: "json",
+                    type: "POST"
+                }
+            },
+            pageSize: numeroFilas
+        });
+
+        $("#contratosGrid").kendoGrid({
+            dataSource: dsContratos,
+            columns: [
+            {
+                field: "NombreEmpresa",
+                title: "Empresa"
+            },
+            { field: "Descripcion",
+                title: "Descripción"
+            },
+            {
+                field: "FechaCreacion",
+                title: "Fecha creación"
+            },
+            {
+                field: "FechaCaducidad",
+                title: "Fecha caducidad"
+            },
+            {
+                field: "Importe",
+                title: "Importe"
+            }
+        ],
+            selectable: true,
+            filterable: true,
+            pageable: true
         });
     }
 

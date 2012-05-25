@@ -14,6 +14,7 @@
     <AssemblyName>TortolasProject</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,10 +34,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="HiQPdf">
+      <HintPath>..\..\..\..\Downloads\HiQPdf_5.2\HiQPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.2.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Downloads\itextsharp-all-5.2.1\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xtra, Version=5.2.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Downloads\itextsharp-all-5.2.1\itextsharp.xtra.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Rotativa">
+      <HintPath>..\packages\Rotativa.1.2.2\lib\net40\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -51,6 +72,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -60,52 +82,251 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Telerik.Reporting, Version=6.0.12.302, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+    <Reference Include="Telerik.Reporting.Design.VisualStudio, Version=6.0.12.302, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="Telerik.Web.UI, Version=2012.1.301.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Administracion\AdministracionController.cs" />
     <Compile Include="Controllers\ArticulosController.cs" />
-<<<<<<< HEAD
+    <Compile Include="Controllers\CursillosController.cs" />
+    <Compile Include="Controllers\AsociacionesController.cs" />
+    <Compile Include="Controllers\ContratosController.cs" />
+    <Compile Include="Controllers\ConveniosController.cs" />
     <Compile Include="Controllers\EventosController.cs" />
-=======
     <Compile Include="Controllers\EmpresasController.cs" />
->>>>>>> 5cda35ad7ba6bc1e03e43cd479e0276715af452e
     <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventarioController.cs" />
+    <Compile Include="Controllers\Monitores\MonitoresController.cs" />
+    <Compile Include="Controllers\PatrocinadoresController.cs" />
     <Compile Include="Controllers\PedidosController.cs" />
+    <Compile Include="Controllers\Perfil\PerfilController.cs" />
+    <Compile Include="Controllers\ProveedoresController.cs" />
+    <Compile Include="Controllers\PublicidadController.cs" />
+    <Compile Include="Controllers\RutasController.cs" />
+    <Compile Include="Controllers\Socios\SociosController.cs" />
+    <Compile Include="Controllers\Usuarios\UsuariosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Informes\DataSetFacturacion.cs">
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\DataSetFacturacion.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Informes\facturacion.aspx.cs">
+      <DependentUpon>facturacion.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Informes\facturacion.aspx.designer.cs">
+      <DependentUpon>facturacion.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\Movimiento.cs" />
     <Compile Include="Models\mtbMalaga.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>mtbMalaga.dbml</DependentUpon>
     </Compile>
     <Compile Include="Models\Repositorios\Account\AccountRepositorio.cs" />
-<<<<<<< HEAD
+    <Compile Include="Models\Repositorios\Eventos\CursillosRepositorio.cs" />
     <Compile Include="Models\Repositorios\Eventos\EventosRepositorio.cs" />
-=======
     <Compile Include="Models\Repositorios\Empresas\EmpresasRepositorio.cs" />
->>>>>>> 5cda35ad7ba6bc1e03e43cd479e0276715af452e
     <Compile Include="Models\Repositorios\Facturas\FacturasRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Monitores\MonitoresRepositorio.cs" />
     <Compile Include="Models\Repositorios\Pedidos\ArticulosRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Pedidos\InventarioRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Pedidos\PedidosRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Perfil\MensajesRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Rutas\RutasRepositorio.cs" />
+    <Compile Include="Models\Repositorios\Usuarios\UsuariosRepositorio.cs" />
+    <Compile Include="Models\tbFactura.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Informes\facturacion.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>facturacion.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\icubeDB.mdf" />
+    <Content Include="App_Data\icubeDB_log.ldf">
+      <DependentUpon>icubeDB.mdf</DependentUpon>
+    </Content>
+    <Content Include="Content\Administracion\Monitores\monitores.css" />
+    <Content Include="Content\Administracion\Socios\AdminSocios.css" />
+    <Content Include="Content\Administracion\Usuarios\Usuarios.css" />
     <Content Include="Content\crud.css" />
-<<<<<<< HEAD
-    <Content Include="Content\Eventos\EventosKendocss.css" />
-=======
+    <Content Include="Content\emailBIG_titulo.png" />
     <Content Include="Content\Empresas\EmpresasNav.css" />
+    <Content Include="Content\Empresas\FormatoTexto.css" />
+    <Content Include="Content\Eventos\EventosKendocss.css" />
     <Content Include="Content\Empresas\EmpresasNew.css" />
->>>>>>> 5cda35ad7ba6bc1e03e43cd479e0276715af452e
+    <Content Include="Content\Facturas\facturaPDF.css" />
+    <Content Include="Content\Facturas\graficosContables.css" />
+    <Content Include="Content\Facturas\movimientoPDF.css" />
+    <Content Include="Content\Facturas\visorRuta.css" />
+    <Content Include="Content\iconos\Amaranto-Office-Chair.png" />
+    <Content Include="Content\iconos\Black-Dossier.png" />
+    <Content Include="Content\iconos\Blue-Dossier.png" />
+    <Content Include="Content\iconos\Blue-Office-Chair.png" />
+    <Content Include="Content\iconos\boss.png" />
+    <Content Include="Content\iconos\calculator.png" />
+    <Content Include="Content\iconos\card file.png" />
+    <Content Include="Content\iconos\case.png" />
+    <Content Include="Content\iconos\chair-128.png" />
+    <Content Include="Content\iconos\chair-256.png" />
+    <Content Include="Content\iconos\chair-32.png" />
+    <Content Include="Content\iconos\chair-48.png" />
+    <Content Include="Content\iconos\chair-64.png" />
+    <Content Include="Content\iconos\coffee_machine-128.png" />
+    <Content Include="Content\iconos\coffee_machine-256.png" />
+    <Content Include="Content\iconos\coffee_machine-32.png" />
+    <Content Include="Content\iconos\coffee_machine-48.png" />
+    <Content Include="Content\iconos\coffee_machine-64.png" />
+    <Content Include="Content\iconos\company.png" />
+    <Content Include="Content\iconos\cup_coffee-128.png" />
+    <Content Include="Content\iconos\cup_coffee-256.png" />
+    <Content Include="Content\iconos\cup_coffee-32.png" />
+    <Content Include="Content\iconos\cup_coffee-48.png" />
+    <Content Include="Content\iconos\cup_coffee-64.png" />
+    <Content Include="Content\iconos\Disabled\128x128\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\128x128\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\128x128\Paste.png" />
+    <Content Include="Content\iconos\Disabled\128x128\Red X.png" />
+    <Content Include="Content\iconos\Disabled\128x128\Unlock.png" />
+    <Content Include="Content\iconos\Disabled\16x16\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\16x16\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\16x16\Paste.png" />
+    <Content Include="Content\iconos\Disabled\16x16\Red X.png" />
+    <Content Include="Content\iconos\Disabled\16x16\Unlock.png" />
+    <Content Include="Content\iconos\Disabled\24x24\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\24x24\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\24x24\Paste.png" />
+    <Content Include="Content\iconos\Disabled\24x24\Red X.png" />
+    <Content Include="Content\iconos\Disabled\24x24\Unlock.png" />
+    <Content Include="Content\iconos\Disabled\256x256\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\256x256\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\256x256\Paste.png" />
+    <Content Include="Content\iconos\Disabled\256x256\Red X.png" />
+    <Content Include="Content\iconos\Disabled\256x256\Unlock.png" />
+    <Content Include="Content\iconos\Disabled\32x32\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\32x32\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\32x32\Paste.png" />
+    <Content Include="Content\iconos\Disabled\32x32\Red X.png" />
+    <Content Include="Content\iconos\Disabled\32x32\Unlock.png" />
+    <Content Include="Content\iconos\Disabled\48x48\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\48x48\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\48x48\Paste.png" />
+    <Content Include="Content\iconos\Disabled\48x48\Red X.png" />
+    <Content Include="Content\iconos\Disabled\48x48\Unlock.png" />
+    <Content Include="Content\iconos\Disabled\72x72\Abacus.png" />
+    <Content Include="Content\iconos\Disabled\72x72\Money Bag.png" />
+    <Content Include="Content\iconos\Disabled\72x72\Paste.png" />
+    <Content Include="Content\iconos\Disabled\72x72\Red X.png" />
+    <Content Include="Content\iconos\Disabled\72x72\Unlock.png" />
+    <Content Include="Content\iconos\dollar.png" />
+    <Content Include="Content\iconos\Email-64.png" />
+    <Content Include="Content\iconos\Gnome-Mail-Mark-Unread-64.png" />
+    <Content Include="Content\iconos\Green-Dossier.png" />
+    <Content Include="Content\iconos\Hot\128x128\Abacus.png" />
+    <Content Include="Content\iconos\Hot\128x128\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\128x128\Paste.png" />
+    <Content Include="Content\iconos\Hot\128x128\Red X.png" />
+    <Content Include="Content\iconos\Hot\128x128\Unlock.png" />
+    <Content Include="Content\iconos\Hot\16x16\Abacus.png" />
+    <Content Include="Content\iconos\Hot\16x16\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\16x16\Paste.png" />
+    <Content Include="Content\iconos\Hot\16x16\Red X.png" />
+    <Content Include="Content\iconos\Hot\16x16\Unlock.png" />
+    <Content Include="Content\iconos\Hot\24x24\Abacus.png" />
+    <Content Include="Content\iconos\Hot\24x24\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\24x24\Paste.png" />
+    <Content Include="Content\iconos\Hot\24x24\Red X.png" />
+    <Content Include="Content\iconos\Hot\24x24\Unlock.png" />
+    <Content Include="Content\iconos\Hot\256x256\Abacus.png" />
+    <Content Include="Content\iconos\Hot\256x256\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\256x256\Paste.png" />
+    <Content Include="Content\iconos\Hot\256x256\Red X.png" />
+    <Content Include="Content\iconos\Hot\256x256\Unlock.png" />
+    <Content Include="Content\iconos\Hot\32x32\Abacus.png" />
+    <Content Include="Content\iconos\Hot\32x32\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\32x32\Paste.png" />
+    <Content Include="Content\iconos\Hot\32x32\Red X.png" />
+    <Content Include="Content\iconos\Hot\32x32\Unlock.png" />
+    <Content Include="Content\iconos\Hot\48x48\Abacus.png" />
+    <Content Include="Content\iconos\Hot\48x48\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\48x48\Paste.png" />
+    <Content Include="Content\iconos\Hot\48x48\Red X.png" />
+    <Content Include="Content\iconos\Hot\48x48\Unlock.png" />
+    <Content Include="Content\iconos\Hot\72x72\Abacus.png" />
+    <Content Include="Content\iconos\Hot\72x72\Money Bag.png" />
+    <Content Include="Content\iconos\Hot\72x72\Paste.png" />
+    <Content Include="Content\iconos\Hot\72x72\Red X.png" />
+    <Content Include="Content\iconos\Hot\72x72\Unlock.png" />
+    <Content Include="Content\iconos\Keynote-Off.png" />
+    <Content Include="Content\iconos\Keynote-On.png" />
+    <Content Include="Content\iconos\Lime-Dossier.png" />
+    <Content Include="Content\iconos\Magenta-Dossiers.png" />
+    <Content Include="Content\iconos\Mail-48.png" />
+    <Content Include="Content\iconos\map_icon.png" />
+    <Content Include="Content\iconos\Money-256.png" />
+    <Content Include="Content\iconos\money.png" />
+    <Content Include="Content\iconos\monitor-128.png" />
+    <Content Include="Content\iconos\monitor-256.png" />
+    <Content Include="Content\iconos\monitor-32.png" />
+    <Content Include="Content\iconos\monitor-48.png" />
+    <Content Include="Content\iconos\monitor-64.png" />
+    <Content Include="Content\iconos\Numbers-Stats.png" />
+    <Content Include="Content\iconos\Office-Chair.png" />
+    <Content Include="Content\iconos\Orange-Dossier.png" />
+    <Content Include="Content\iconos\Pages-Black.png" />
+    <Content Include="Content\iconos\Pages-Brown.png" />
+    <Content Include="Content\iconos\Pages-Green.png" />
+    <Content Include="Content\iconos\Purple-Dossier.png" />
+    <Content Include="Content\iconos\Red-Dossier.png" />
+    <Content Include="Content\iconos\Red-Office-Chair.png" />
+    <Content Include="Content\iconos\Regular\Abacus.png" />
+    <Content Include="Content\iconos\Regular\Money Bag.png" />
+    <Content Include="Content\iconos\Regular\Paste.png" />
+    <Content Include="Content\iconos\Regular\Red X.png" />
+    <Content Include="Content\iconos\Regular\Unlock.png" />
+    <Content Include="Content\iconos\signature.png" />
+    <Content Include="Content\iconos\Statistics-Calculator.png" />
+    <Content Include="Content\iconos\stockmarket.png" />
+    <Content Include="Content\iconos\syncsocios.png" />
+    <Content Include="Content\iconos\syncsociosantiguedad.png" />
+    <Content Include="Content\iconos\touch screen kiosk-128.png" />
+    <Content Include="Content\iconos\touch screen kiosk-256.png" />
+    <Content Include="Content\iconos\touch screen kiosk-32.png" />
+    <Content Include="Content\iconos\touch screen kiosk-48.png" />
+    <Content Include="Content\iconos\touch screen kiosk-64.png" />
+    <Content Include="Content\iconos\user-128.png" />
+    <Content Include="Content\iconos\user-256.png" />
+    <Content Include="Content\iconos\user-32.png" />
+    <Content Include="Content\iconos\user-48.png" />
+    <Content Include="Content\iconos\user-64.png" />
+    <Content Include="Content\iconos\wallet.png" />
+    <Content Include="Content\iconos\White-Dossier.png" />
+    <Content Include="Content\iconos\Yellow-Dossier.png" />
+    <Content Include="Content\images\bienvenidosocio.png" />
+    <Content Include="Content\images\comentario.png" />
+    <Content Include="Content\images\cvv2.png" />
+    <Content Include="Content\images\fondocarnet.png" />
     <Content Include="Content\Facturas\facturasIndex.css" />
     <Content Include="Content\Facturas\facturasNav.css" />
     <Content Include="Content\Facturas\factura.css" />
-    <Content Include="Content\Facturas\nuevaFactura.css" />
+    <Content Include="Content\Facturas\leerMovimiento.css" />
+    <Content Include="Content\Facturas\movimientos.css" />
     <Content Include="Content\icons\agents.ico" />
     <Content Include="Content\icons\aim-away.ico" />
     <Content Include="Content\icons\aim-chat.ico" />
@@ -206,11 +427,57 @@
     <Content Include="Content\icons\yahoo-occupied.ico" />
     <Content Include="Content\icons\yahoo.ico" />
     <Content Include="Content\images\asociaciones.jpg" />
+    <Content Include="Content\images\cursillostitulo.png" />
+    <Content Include="Content\images\broken-bike.jpg" />
+    <Content Include="Content\images\contrato.jpg" />
+    <Content Include="Content\images\convenios.jpg" />
     <Content Include="Content\images\empresas.png" />
+    <Content Include="Content\images\eventostitulo.png" />
+    <Content Include="Content\images\exclamacion.png" />
+    <Content Include="Content\images\Information-icon.png" />
+    <Content Include="Content\images\info_titulo.png" />
+    <Content Include="Content\images\junta-new.png" />
+    <Content Include="Content\images\mapasubir.png" />
+    <Content Include="Content\images\map_app.png" />
+    <Content Include="Content\images\monitores\01_1024x768.jpg" />
+    <Content Include="Content\images\monitores\13.jpg" />
+    <Content Include="Content\images\monitores\17881-1280x800-husky.jpg" />
+    <Content Include="Content\images\monitores\2.jpg" />
+    <Content Include="Content\images\monitores\2_1280.jpg" />
+    <Content Include="Content\images\monitores\31138-1280x800-wallpapers-dogs-siberian.jpg" />
+    <Content Include="Content\images\monitores\4.jpg" />
+    <Content Include="Content\images\monitores\5.jpg" />
+    <Content Include="Content\images\monitores\chucknorris.jpg" />
+    <Content Include="Content\images\nuevaruta.png" />
+    <Content Include="Content\images\patrocinador.jpg" />
+    <Content Include="Content\images\monitores\monitores_titulo.png" />
+    <Content Include="Content\images\monitores_titulo.png" />
+    <Content Include="Content\images\nosocio.png" />
+    <Content Include="Content\images\pago.gif" />
+    <Content Include="Content\images\publicidad.jpg" />
+    <Content Include="Content\images\socios\danie.png" />
+    <Content Include="Content\images\tituloadminsocios.png" />
+    <Content Include="Content\images\titulobienvenida.png" />
+    <Content Include="Content\images\titulocaptacion.png" />
+    <Content Include="Content\images\titulocuotas.png" />
+    <Content Include="Content\images\tituloinneradminsocios.png" />
+    <Content Include="Content\images\titulorutas.png" />
+    <Content Include="Content\images\titulousuarios.png" />
+    <Content Include="Content\images\tituloventanaeditarsocio.png" />
+    <Content Include="Content\images\tituloventananuevosocio.png" />
+    <Content Include="Content\images\user-new.png" />
+    <Content Include="Content\images\usuarios\526214_10150894749063804_1689304985_n.jpg" />
+    <Content Include="Content\images\usuarios\Abstract_wall.png" />
+    <Content Include="Content\images\usuarios\darthvader_1600.jpg" />
+    <Content Include="Content\images\usuarios\full-moon-cat-4913.jpg" />
+    <Content Include="Content\images\vermapa.png" />
     <Content Include="Content\logo_azul.png" />
     <Content Include="Content\master.css" />
     <Content Include="Content\nav.css" />
     <Content Include="Content\newCascadeStyleSheet.css" />
+    <Content Include="Content\Perfil\Perfil.css" />
+    <Content Include="Content\images\proveedores.jpg" />
+    <Content Include="Content\Rutas\Rutas.css" />
     <Content Include="Content\slide.css" />
     <Content Include="Content\style.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -265,6 +532,13 @@
     <Content Include="Content\images\tab_r.png" />
     <Content Include="Content\images\tour_hirschaidt011_1300216458.jpg" />
     <Content Include="Content\images\UserGroup.png" />
+    <Content Include="Informes\facturacion.aspx" />
+    <Content Include="Rotativa\libeay32.dll" />
+    <Content Include="Rotativa\libgcc_s_dw2-1.dll" />
+    <Content Include="Rotativa\mingwm10.dll" />
+    <Content Include="Rotativa\README.txt" />
+    <Content Include="Rotativa\ssleay32.dll" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.af.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.am-ET.min.js" />
@@ -618,6 +892,7 @@
     <Content Include="Scripts\cultures\kendo.culture.zh.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.zu-ZA.min.js" />
     <Content Include="Scripts\cultures\kendo.culture.zu.min.js" />
+    <Content Include="Scripts\Highcharts\highstock.js" />
     <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.5.1.js" />
     <Content Include="Scripts\jquery-1.5.1.min.js" />
@@ -627,18 +902,40 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jsactions\Administracion\Administracion.js" />
+    <Content Include="Scripts\jsactions\Administracion\Monitores\Monitores.js" />
+    <Content Include="Scripts\jsactions\Administracion\Socios\AdminSocios.js" />
+    <Content Include="Scripts\jsactions\Administracion\Socios\cuotasdescuento.js" />
+    <Content Include="Scripts\jsactions\Administracion\Usuarios.js" />
+    <Content Include="Scripts\jsactions\Administracion\Usuarios\AdminUsuarios.js" />
     <Content Include="Scripts\jsactions\captacion.js" />
-    <Content Include="Scripts\jsactions\Facturas\facturasDetalles.js" />
-    <Content Include="Scripts\jsactions\Facturas\facturasEditar.js" />
-<<<<<<< HEAD
+    <Content Include="Scripts\jsactions\Facturas\facturas.js" />
+    <Content Include="Scripts\jsactions\Eventos\cursillos.js" />
+    <Content Include="Scripts\jsactions\Facturas\graficosContables.js" />
+    <Content Include="Scripts\jsactions\Facturas\movimientos.js" />
+    <Content Include="Scripts\jsactions\Facturas\generarFacturaPDF.js" />
+    <Content Include="Scripts\jsactions\Facturas\Old\facturasDetalles.js" />
+    <Content Include="Scripts\jsactions\Empresas\Asociaciones\Asociaciones.js" />
+    <Content Include="Scripts\jsactions\Empresas\Contratos\Contratos.js" />
+    <Content Include="Scripts\jsactions\Empresas\Convenios\Convenios.js" />
+    <Content Include="Scripts\jsactions\Empresas\Patrocinadores\Patrocinadores.js" />
+    <Content Include="Scripts\jsactions\Empresas\Proveedores\Proveedores.js" />
+    <Content Include="Scripts\jsactions\Empresas\Empresas\EmpresasIndex.js" />
+    <Content Include="Scripts\jsactions\Facturas\Old\facturasEditar.js" />
     <Content Include="Scripts\jsactions\Eventos\eventos.js" />
-=======
-    <Content Include="Scripts\jsactions\Empresas\EmpresasIndex.js" />
-    <Content Include="Scripts\jsactions\Empresas\NuevaEmpresa.js" />
->>>>>>> 5cda35ad7ba6bc1e03e43cd479e0276715af452e
+    <Content Include="Scripts\jsactions\Empresas\Empresas\NuevaEmpresa.js" />
     <Content Include="Scripts\jsactions\Facturas\facturasIndex.js" />
     <Content Include="Scripts\jsactions\Facturas\facturasNav.js" />
-    <Content Include="Scripts\jsactions\Facturas\facturasNueva.js" />
+    <Content Include="Scripts\jsactions\Facturas\Old\facturasNueva.js" />
+    <Content Include="Scripts\jsactions\Rutas\visorRutas.js" />
+    <Content Include="Scripts\jsactions\Pedidos\inventarioIndex.js" />
+    <Content Include="Scripts\jsactions\Pedidos\pedidosCerrados.js" />
+    <Content Include="Scripts\jsactions\Perfil\Informacion.js" />
+    <Content Include="Scripts\jsactions\Pedidos\pedidosIndex.js" />
+    <Content Include="Scripts\jsactions\Perfil\Mensajeria.js" />
+    <Content Include="Scripts\jsactions\Perfil\Perfil.js" />
+    <Content Include="Scripts\jsactions\Perfil\Socio.js" />
+    <Content Include="Scripts\jsactions\Rutas\Rutas.js" />
     <Content Include="Scripts\jsactions\siteMaster.js" />
     <Content Include="Scripts\jsactions\Pedidos\articulosIndex.js" />
     <Content Include="Scripts\kendo.all.min.js" />
@@ -697,29 +994,20 @@
     <Content Include="Scripts\kendo.validator.min.js" />
     <Content Include="Scripts\kendo.web.min.js" />
     <Content Include="Scripts\kendo.window.min.js" />
+    <Content Include="Scripts\Highcharts\highcharts.js" />
+    <Content Include="Scripts\Highcharts\themes\dark-blue.js" />
+    <Content Include="Scripts\Highcharts\themes\dark-green.js" />
+    <Content Include="Scripts\Highcharts\themes\gray.js" />
+    <Content Include="Scripts\Highcharts\themes\grid.js" />
+    <Content Include="Scripts\Highcharts\themes\skies.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
-    <Content Include="Views\Facturas\editarFactura.aspx" />
-    <Content Include="Views\Facturas\leerFactura.aspx" />
-    <Content Include="Views\Articulos\AnadirArticulo.ascx" />
-    <Content Include="Views\Articulos\EditarArticulo.ascx" />
-    <Content Include="Views\Facturas\factura.aspx" />
-<<<<<<< HEAD
-    <Content Include="Views\Eventos\Index.aspx" />
-=======
-    <Content Include="Views\Empresas\Index.aspx" />
-    <Content Include="Views\Empresas\NuevaEmpresa.ascx" />
->>>>>>> 5cda35ad7ba6bc1e03e43cd479e0276715af452e
-    <Content Include="Views\Facturas\Create.ascx" />
-    <Content Include="Views\Facturas\Details.ascx" />
-    <Content Include="Views\Facturas\NuevaFactura.ascx" />
-    <Content Include="Views\Facturas\Prueba.ascx" />
-    <Content Include="Views\Home\cabron.aspx" />
-    <Content Include="Views\Home\Hola.aspx" />
-    <Content Include="Views\Home\eventos.aspx" />
-    <Content Include="Scripts\pngfix\supersleight-min.js" />
-    <Content Include="Scripts\pngfix\x.gif" />
-    <Content Include="Scripts\slide.js" />
+    <Content Include="Scripts\qtip2nightly\jquery.qtip.css" />
+    <Content Include="Scripts\qtip2nightly\jquery.qtip.js" />
+    <Content Include="Scripts\qtip2nightly\jquery.qtip.min.css" />
+    <Content Include="Scripts\qtip2nightly\jquery.qtip.min.js" />
+    <Content Include="Scripts\qtip2nightly\jquery.validate.min.js" />
+    <Content Include="Scripts\qtip2nightly\validation.css" />
     <Content Include="Scripts\styles\Black\editor.png" />
     <Content Include="Scripts\styles\Black\imagebrowser.png" />
     <Content Include="Scripts\styles\Black\loading-image.gif" />
@@ -773,10 +1061,44 @@
     <Content Include="Scripts\styles\Silver\sprite.png" />
     <Content Include="Scripts\styles\textures\glass.png" />
     <Content Include="Scripts\styles\textures\highlight.png" />
+    <Content Include="Views\Administracion\Index.aspx" />
+    <Content Include="Views\Facturas\PDF\facturaPDF.aspx" />
+    <Content Include="Views\Facturas\facturaPDF.ascx" />
+    <Content Include="Views\Facturas\facturasNav.ascx" />
+    <Content Include="Views\Facturas\graficosContables.aspx" />
+    <Content Include="Views\Cursillos\Index.aspx" />
+    <Content Include="Views\Cursillos\VistaCrearCursillo.ascx" />
+    <Content Include="Views\Facturas\informesContables.aspx" />
+    <Content Include="Views\Facturas\Old\editarFactura.aspx" />
+    <Content Include="Views\Facturas\Old\leerFactura.aspx" />
+    <Content Include="Views\Articulos\AnadirArticulo.ascx" />
+    <Content Include="Views\Articulos\EditarArticulo.ascx" />
+    <Content Include="Views\Empresas\Index.aspx" />
+    <Content Include="Views\Eventos\Index.aspx" />
+    <Content Include="Views\Empresas\NuevaEmpresa.ascx" />
+    <Content Include="Views\Facturas\factura.aspx" />
+    <Content Include="Views\Eventos\VistaCrearEvento.ascx" />
+    <Content Include="Scripts\pngfix\supersleight-min.js" />
+    <Content Include="Scripts\pngfix\x.gif" />
+    <Content Include="Scripts\slide.js" />
     <Content Include="Views\Facturas\Index.aspx" />
+    <Content Include="Views\Facturas\leerMovimiento.aspx" />
+    <Content Include="Views\Facturas\Movimientos.aspx" />
+    <Content Include="Views\Facturas\PDF\movimientoPDF.aspx" />
+    <Content Include="Views\Facturas\visorRuta.aspx" />
     <Content Include="Views\Home\Captacion.aspx" />
     <Content Include="Views\Articulos\Index.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Views\Monitores\Index.aspx" />
+    <Content Include="Views\Pedidos\PedidosCerrados.aspx" />
+    <Content Include="Views\Perfil\Index.aspx" />
+    <Content Include="Views\Inventario\Index.aspx" />
+    <Content Include="Views\Pedidos\Index.aspx" />
+    <Content Include="Views\Rutas\Index.aspx" />
+    <Content Include="Views\Socios\Index.aspx" />
+    <Content Include="Views\Usuarios\Index.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -798,12 +1120,13 @@
     <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Account\LogOn.aspx" />
     <Content Include="Views\Account\Register.aspx" />
-    <Content Include="Views\Home\About.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Shared\Error.aspx" />
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\Site.Master" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -815,20 +1138,55 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Browsers\qt.browser" />
+    <None Include="Content\Rutas\rutaGPX.gpx" />
+    <None Include="Content\Rutas\ruta.kml" />
+<<<<<<< HEAD
+=======
+    <None Include="Informes\DataSetFacturacion.xsc">
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+    </None>
+>>>>>>> 6c67f129dcb02d2c12d7997261bea3a1620fb62d
+    <Content Include="Content\iconos\desktop-business-icons-PNG.zip" />
+    <Content Include="Content\iconos\Dossier-png.zip" />
+    <Content Include="Content\iconos\Financial-Accounting-png.zip" />
+    <Content Include="Content\iconos\iWork10-png.zip" />
+    <Content Include="Content\iconos\Office-Chairs-png.zip" />
+    <Content Include="Content\iconos\office_space_png.zip" />
+<<<<<<< HEAD
+=======
+    <None Include="Informes\DataSetFacturacion.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetFacturacion.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Informes\DataSetFacturacion.xss">
+      <DependentUpon>DataSetFacturacion.xsd</DependentUpon>
+    </None>
+>>>>>>> 6c67f129dcb02d2c12d7997261bea3a1620fb62d
     <None Include="Models\mtbMalaga.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>mtbMalaga.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Scripts\pngfix\Thumbs.db" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\mtbMalaga.dbml.layout">
       <DependentUpon>mtbMalaga.dbml</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Informes\facturacion.resx">
+      <DependentUpon>facturacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\facturacion.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>facturacion.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -847,7 +1205,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3608</DevelopmentServerPort>
+          <DevelopmentServerPort>15015</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

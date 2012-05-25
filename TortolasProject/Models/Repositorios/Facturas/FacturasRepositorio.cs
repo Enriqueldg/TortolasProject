@@ -297,10 +297,10 @@ namespace TortolasProject.Models.Repositorios
         {
             Dictionary<DateTime,Decimal[]> datos = new Dictionary<DateTime,decimal[]>();
 
-            foreach (tbFactura f in mtbMalagaDB.tbFactura.ToList())
+            foreach (tbFactura f in mtbMalagaDB.tbFactura.Where(f => f.Eliminado == false).ToList())
             {
                 DateTime fecha = new DateTime(f.Fecha.Year,f.Fecha.Month,f.Fecha.Day);
-                if (!datos.ContainsKey(new DateTime(fecha.Year,fecha.Month,fecha.Day)))
+                if (!datos.ContainsKey(new DateTime(fecha.Year,fecha.Month,1)))
                 {
                     Decimal[] valores = new Decimal[2];
                     if(f.Total >= 0)
@@ -318,11 +318,11 @@ namespace TortolasProject.Models.Repositorios
                 {                   
                     if(f.Total >= 0)
                     {
-                        datos[fecha][0] = datos[fecha][0] + f.Total;
+                        datos[new DateTime(fecha.Year, fecha.Month, 1)][0] = datos[new DateTime(fecha.Year, fecha.Month, 1)][0] + f.Total;
                     }
                     else
                     {
-                        datos[fecha][1] = datos[fecha][1] - f.Total;
+                        datos[new DateTime(fecha.Year, fecha.Month, 1)][1] = datos[new DateTime(fecha.Year, fecha.Month, 1)][1] - f.Total;
                     }
                 }
             }

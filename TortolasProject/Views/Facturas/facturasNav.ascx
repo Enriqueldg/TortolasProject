@@ -5,7 +5,7 @@
                 <li id="facturasButtonNav"><%: Html.ActionLink("Facturas", "Index", "Facturas") %></li>
                 <li id="movimientosButtonNav"><%: Html.ActionLink("Movimientos", "Movimientos", "Facturas") %></li>
                 <li id="graficosContablesButtonNav"><%: Html.ActionLink("Gráficos contables", "graficosContables", "Facturas") %></li>
-                <li id="informesContablesButtonNav"><%: Html.ActionLink("Informes contables", "informesContables", "Facturas") %></li>
+                <li id="informesContablesButtonNav"><%: Html.ActionLink("Informes contables", "../Informes/facturacion.aspx") %></li>
             </ul>            
         </div>
         <!-- 

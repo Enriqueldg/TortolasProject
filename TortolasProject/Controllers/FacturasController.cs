@@ -154,27 +154,11 @@ namespace TortolasProject.Controllers
             return View();
         }
 
-            // Informes contables
-        [Authorize(Roles = "Junta Directiva, Asesor fiscal")]
-        public ActionResult informesContables()
-        {
-            ReportClass rptH = new ReportClass();
-            rptH.FileName = Server.MapPath("Informes/facturacion.rpt");
-            rptH.Load();
-            rptH.SetDataSource(db);
-            Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-            return File(stream, "application/pdf");
-        }
-
         public ActionResult visorRuta()
         {
             return View();
         }
-        public ActionResult devolverRuta()
-        {
-            String filename = "~/Content/Rutas/rutaGPX.gpx";
-            return File(filename, "text/xml", Server.HtmlEncode(filename));
-        }
+        
         ///////////////////////////////////////////////////////////////////////////////
         // Funciones FACTURAS
         ///////////////////////////////////////////////////////////////////////////////
@@ -408,7 +392,7 @@ namespace TortolasProject.Controllers
                 unidadesLinea = lineasFacturaRaw[i].unidades;
                 totalLinea = unidadesLinea * precioLinea;
 
-                if (!lineasFacturaRaw[i].idLineaFactura.Equals(""))
+                if (! (lineasFacturaRaw[i].idLineaFactura == null))
                 {
                     tbLineaFactura linea = new tbLineaFactura
                     {
@@ -446,6 +430,7 @@ namespace TortolasProject.Controllers
 
             if (estadoFactura.Equals(FacturasRepo.leerEstadoByNombre("Pagado").idEstadoFactura))
             {
+                
                 // Creamos un movimiento relacionado con la factura
                 if (facturaAntigua.Total < 0)
                 {
@@ -478,6 +463,24 @@ namespace TortolasProject.Controllers
                 
             FacturasRepo.modificarFactura(idFactura, facturaAntigua);
 
+            if(estadoFactura.Equals(FacturasRepo.leerEstadoByNombre("Pagado").idEstadoFactura) && facturaAntigua.FKUsuario.HasValue)
+            {
+                UsuariosRepositorio UsuariosRepo = new UsuariosRepositorio();
+                tbSocio socio = UsuariosRepo.obtenerSocioById(facturaAntigua.FKUsuario.Value);
+
+                if ( UsuariosRepo.cuotasDeSocio(socio.idSocio).Where(cs => cs.FKFactura == facturaAntigua.idFactura).Count() > 0)
+                {                    
+                
+                    UsuariosRepo.cambiarEstadoSocio(
+                        facturaAntigua.FKUsuario.Value,
+                        "Activo", 
+                        (UsuariosRepo.cuotasDeSocio(socio.idSocio)
+                                            .Where(c => c.FKFactura == facturaAntigua.idFactura)
+                                            .Single().FechaExpiracion.ToString()
+                        )
+                    );
+                }
+            }
             foreach (tbLineaFactura lineaExistente in lineasExistentes)
             {
                 FacturasRepo.eliminarLinea(FacturasRepo.listarLineasFactura(idFactura).Where(l => l.idLineaFactura == lineaExistente.idLineaFactura).Single().idLineaFactura);
@@ -509,11 +512,11 @@ namespace TortolasProject.Controllers
             EmpresasRepositorio EmpresasRepo = new EmpresasRepositorio();
             
 
-            if (f.FKUsuario != null) { f.idRelacion = f.FKUsuario.ToString(); f.tipo = "usuario"; f.RelacionName = "Usuario: "+UsuariosRepo.obtenerUsuario(f.FKUsuario.Value).Nickname; }
-            else if (f.FKEventoOficial != null) { f.idRelacion = f.FKEventoOficial.ToString(); f.tipo = "eventos"; f.RelacionName = "Evento oficial: "+EventosRepo.obtenerEventoByEventoOficial(f.FKEventoOficial).Titulo;}
+            if (f.FKUsuario.HasValue) { f.idRelacion = f.FKUsuario.Value.ToString(); f.tipo = "usuario"; f.RelacionName = "Usuario: "+UsuariosRepo.obtenerUsuario(f.FKUsuario.Value).Nickname; }
+            else if (f.FKEventoOficial != null) { f.idRelacion = f.FKEventoOficial.ToString(); f.tipo = "eventos"; f.RelacionName = "Evento oficial: "+EventosRepo.obtenerEventoByEventoOficial(f.FKEventoOficial.Value).Titulo;}
             else if (f.FKCursillo != null) { f.idRelacion = f.FKCursillo.ToString(); f.tipo = "cursillos"; f.RelacionName = "Cursillo: "+CursillosRepo.leerCursillo(f.FKCursillo.Value).Titulo;}
             else if (f.FKPedidoGlobal != null) { f.idRelacion = f.FKPedidoGlobal.ToString(); f.tipo = "pedidoGlobal"; f.RelacionName = "Pedido Global: "+PedidosRepo.getPedidoGlobalById(f.FKPedidoGlobal.Value).Nombre; }
-            else if (f.FKPedidoUsuario != null) { f.idRelacion = f.FKPedidoUsuario.ToString(); f.tipo = "pedidoUsuario"; f.RelacionName = "Pedido: " + PedidosRepo.getPedidoGlobalById(f.FKPedidoGlobal.Value).Nombre + " Usuario: " + UsuariosRepo.obtenerUsuario(PedidosRepo.getPedidoUsuarioById(f.FKPedidoUsuario.Value)).Nickname; }
+            else if (f.FKPedidoUsuario != null) { f.idRelacion = f.FKPedidoUsuario.ToString(); f.tipo = "pedidoUsuario"; f.RelacionName = "Pedido: " + PedidosRepo.getPedidoGlobalById(f.FKPedidoGlobal.Value).Nombre + " Usuario: " + UsuariosRepo.obtenerUsuario(PedidosRepo.getPedidoUsuarioById(f.FKPedidoUsuario.Value).FKUsuario).Nickname; }
             else if (f.FKCodigoEmpresa != null) { f.idRelacion = f.FKCodigoEmpresa.ToString(); f.tipo = "empresa"; f.RelacionName = "Empresa: "+EmpresasRepo.buscaremp(f.FKCodigoEmpresa.Value).Nombre; }
             else if (f.FKProveedores != null) { f.idRelacion = f.FKProveedores.ToString(); f.tipo = "proveedor"; f.RelacionName = "Proveedor: "+EmpresasRepo.buscaremp(EmpresasRepo.buscarprov(f.FKProveedores.Value).FKCodigoEmpresa).Nombre;}
             else if (f.FKContrato != null) { f.idRelacion = f.FKContrato.ToString(); f.tipo = "contrato"; f.RelacionName = "Contrato: "+EmpresasRepo.buscarcontrato(f.FKContrato.Value).NombreEmpresa; }
@@ -828,6 +831,7 @@ namespace TortolasProject.Controllers
         [HttpPost]
         public JsonResult pedidosGlobalesListado()
         {
+            PedidosRepositorio PedidosRepo = new PedidosRepositorio();
             var pedidos = from e in db.tbPedidoGlobal
                             select new
                             {
@@ -845,6 +849,7 @@ namespace TortolasProject.Controllers
         [HttpPost]
         public JsonResult pedidosUsuarioListado()
         {
+            PedidosRepositorio PedidosRepo = new PedidosRepositorio();
             var pedidos = from e in db.tbPedidoUsuario
                           select new
                           {

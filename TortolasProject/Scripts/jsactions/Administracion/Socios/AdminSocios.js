@@ -55,7 +55,7 @@
             }
         }
     });
-
+    
     // Cargamos la tabla de Socios
     var tablaAdmin = $("#tablaAdminSocios").kendoGrid({
         dataSource: {
@@ -80,7 +80,7 @@
         columns: [
                             {
                                 field: "NumeroSocio",
-                                title: "Socio",
+                                title: "Socio",                                
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -96,7 +96,7 @@
                             },
                             {
                                 field: "Nombre",
-                                title: "Nombre",
+                                title: "Nombre",                                
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -111,7 +111,7 @@
                             },
                             {
                                 field: "Apellidos",
-                                title: "Apellidos",
+                                title: "Apellidos",                                
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -126,7 +126,7 @@
                             },
                             {
                                 field: "FechaAlta",
-                                title: "Alta",
+                                title: "Alta",                                
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -141,7 +141,7 @@
                             },
                             {
                                 field: "FechaExpiracion",
-                                title: "Expiracion",
+                                title: "Expiracion",                                
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -171,7 +171,7 @@
                             },
                             {
                                 field: "DescuentoSocio",
-                                title: "Tipo Descuento",
+                                title: "Descuento",                                
                                 filterable: {
                                     extra: false, //do not show extra filters
                                     operators: { // redefine the string operators
@@ -923,8 +923,8 @@
             }
         });
 
-    }
-
+    }            
+           
     // Cargamos la pestaña de Cuotas y Descuentos
      $.getScript("Scripts/jsactions/Administracion/Socios/cuotasdescuento.js");   
 

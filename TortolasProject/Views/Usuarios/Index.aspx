@@ -53,9 +53,11 @@
                 <div class="tabsUsuario">
                     <ul>
                         <li class="k-state-active">
+                           <img src="../../Content/iconos/Regular/Paste.png" width="30"/>
                            Informacion
                         </li>
                         <li>
+                            <img src="../../Content/iconos/user-32.png" width="30"/>
                             Socio
                         </li>
                     </ul>                    

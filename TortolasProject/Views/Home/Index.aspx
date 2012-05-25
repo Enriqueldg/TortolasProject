@@ -7,5 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <p>
         Prueba dos <a href="http://asp.net/mvc" title="sitio web de ASP.NET MVC">http://asp.net/mvc</a>.
+    
+        <%: Html.ActionLink("Captacion", "Captacion", "Home") %>
     </p>
 </asp:Content>

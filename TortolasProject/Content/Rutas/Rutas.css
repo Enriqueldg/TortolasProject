@@ -1,0 +1,35 @@
+﻿body {
+}
+
+.listaInfo
+{
+    list-style: none;
+}
+
+#formularioCrear
+{
+    margin-left:10%;
+    margin-right:10%;
+}
+
+label
+{    
+    font-weight:bold;
+}
+
+#formularioCrear input:not(.numericKm)
+{
+    margin-top:5px;
+    width:200px;
+}
+
+
+.k-invalid,k-invalid:hover
+{
+    border : 1px solid red;
+}
+#map_canvas
+{
+    width:600px;
+    height:400px;
+}

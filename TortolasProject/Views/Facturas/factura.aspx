@@ -27,10 +27,10 @@
             <div id='poliButton' class='k-button'></div>
             <div id='eliminarButton' class='k-button'></div>
             <div id='pdfButton'><%: Html.ActionLink("Descargar en PDF", "generarFacturaPDF", "Facturas", new { id = Model.idFactura.ToString() }, new { @class = "k-button" })%></div>
+            <div id='relacionesButton' class='k-button'>Añadir relación</div>
         </div>
         <div id='facturaDetalles'>            
             <div id='relacionesFacturaContainer'>
-                <div id='relacionesButton' class='k-button'>Añadir relación</div>
                 <div id='relacionesExistentesDiv'>
                         <div id='relacionDiv'><% if( !estado.Equals("nueva") && Model.idRelacion != null ){ Response.Write(Model.RelacionName); } %></div>
                         <div id='quitarRelacionButton'> x </div>
@@ -133,16 +133,20 @@
         
 
             <div id='totalFacturaDiv'>
-                    <div id='baseImponibleLabel'>Base imponible</div>
-                    <div id='baseImponibleNumero'><% if (!Model.vista.Equals("nueva")) Response.Write(Model.BaseImponible); else Response.Write("0 €"); %></div>
-                    <div id='ivaLabel'>IVA</div>
-                    <div id='ivaNumero'>18%</div>
-                    <div id='totalFacturaLabel'>
-                        Total
-                    </div>
-                    <div id='totalFacturaNumero'>
-                    <% if (!Model.vista.Equals("nueva")) Response.Write(Model.Total); else Response.Write("0 €"); %>
-                    </div>
+                <table class='k-widget'>
+                    <tr>
+                        <td class='k-header'><div id='baseImponibleLabel'>Base imponible</div></td>
+                        <td><div id='baseImponibleNumero'><% if (!Model.vista.Equals("nueva")) Response.Write(Model.BaseImponible); else Response.Write("0 €"); %></div></td>
+                    </tr>
+                    <tr>
+                        <td class='k-header'><div id='ivaLabel'>IVA</div></td>
+                        <td><div id='ivaNumero'>18%</div></td>
+                    </tr>
+                    <tr>
+                        <td class='k-header'><div id='totalFacturaLabel'>Total</div></td>
+                        <td><div id='totalFacturaNumero'><% if (!Model.vista.Equals("nueva")) Response.Write(Model.Total); else Response.Write("0 €"); %></div></td>
+                    </tr>
+                </table>
             </div>
             <div id='facturaBottom'>
                 <div id='descartarFacturaButton' class='k-button'>Descartar</div>
@@ -165,7 +169,7 @@
                                         <div id='articulosGrid'></div>
                                         <div id='agregarArticuloConcepto' class='k-button'>Agregar</div>
                     </div>
-                    <div class='k-grid k-widget'>
+                    <div id='tablaNuevaLineaFactura' class='k-grid k-widget'>
                         <table>                    
                                 <tr class='k-grid-header'>
                                     <th>Unidades</th>

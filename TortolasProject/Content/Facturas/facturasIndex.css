@@ -26,4 +26,11 @@
 {
     margin-left: 10px;
 }
-
+#FacturasGrid tr
+{
+    cursor:pointer;
+}
+#FacturasGrid tr:hover
+{
+    background-color:#ED5614;
+}

@@ -8,3 +8,11 @@
     float:left;
     width:inherit;
 }
+#MovimientosGrid tr
+{
+    cursor:pointer;
+}
+#MovimientosGrid tr:hover
+{
+    background-color:#ED5614;
+}

@@ -319,10 +319,43 @@ namespace TortolasProject.Models.Repositorios
 
             mtbMalagaDB.SubmitChanges();
         }
+        
 
-        public void sincronizarDescuentosAntiguedad()
+
+        // ZONA DE ESTADISTICAS PARA CAPTACION
+
+        public int altasSocioAnno(int Anno)
         {
-            
+            return mtbMalagaDB.tbSocio.Where(socio => socio.FechaAlta.Year.Equals(Anno)).Count();
         }
+
+
+        public decimal numeroSocios()
+        {
+            return mtbMalagaDB.tbSocio.Count();
+        }
+        
+
+        public decimal numeroSociosEstado(String Estado)
+        {
+            return mtbMalagaDB.tbSocio.Where(socio => socio.Estado.Equals(Estado)).Count();
+        }
+
+        public int numeroEventosOficialAnno(int Anno)
+        {
+            return mtbMalagaDB.tbEventoOficial.Where(oficial => mtbMalagaDB.tbEvento.Where(e => e.idEvento.Equals(oficial.FKEvento) && e.FechaRealizacion.Year.Equals(Anno)).Count().Equals(1)).Count();
+        }
+
+        public int numeroEventosAnno(int Anno)
+        {
+            return mtbMalagaDB.tbEvento.Where(e => e.FechaRealizacion.Year.Equals(Anno)).Count() - numeroEventosOficialAnno(Anno);
+        }
+
+        public int numeroCursillosAnno(int Anno)
+        {
+            return mtbMalagaDB.tbCursillo.Where(c => c.FechaRealizacion.Year.Equals(Anno)).Count();
+        }
+
+        
     }
 }

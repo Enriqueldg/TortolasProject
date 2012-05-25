@@ -12,10 +12,10 @@
     <div id="tabsAdminJunta">
         <ul>
             <li class="k-state-active">
-                <img src="../../Content/iconos/Lime-Dossier.png" width="20" height="20"/> Socios & Junta Directiva
+                <img src="../../Content/iconos/Lime-Dossier.png" width="40" /> Socios & Junta Directiva
             </li>
             <li>
-                <img src="../../Content/iconos/money.png" width="20" height="20"/> Cuotas y Descuentos
+                <img src="../../Content/iconos/money.png" width="40"/> Cuotas y Descuentos
             </li>
         </ul>
         
@@ -176,8 +176,8 @@
     <script type="text/x-kendo-template" id="templateDetailAdminSocio">
         <div class="tabsSocios">
             <ul>
-                <li>Informacion</li>
-                <li>Pagos</li>
+                <li><img src="../../Content/iconos/Hot/72x72/Paste.png" width="30"/>Informacion</li>
+                <li><img src="../../Content/iconos/wallet.png" width="30" />Pagos</li>
             </ul>
             <div class="infoSocio">
                 <table>                                                 

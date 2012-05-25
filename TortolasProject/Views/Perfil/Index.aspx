@@ -8,11 +8,26 @@
 
 <div id="pestanasPerfil" class="k-widget">
     <ul>
-        <li class="k-state-active">Informacion</li>
-        <li>Socio</li>
-        <li>Mensajes</li>
-        <li>Estadisticas</li>
-        <li>Rutas</li>
+        <li class="k-state-active">
+            <img src="../../Content/iconos/Pages-Brown.png" height="40"/>
+            Informacion
+        </li>
+        <li>
+            <img src="../../Content/iconos/user-48.png" height="40"/>
+            Socio
+        </li>
+        <li>
+            <img src="../../Content/iconos/Mail-48.png" height="40"/>
+            Mensajes
+        </li>
+        <li>
+            <img src="../../Content/iconos/Keynote-On.png" height="40"/>
+            Estadisticas
+        </li>
+        <li>
+            <img src="../../Content/iconos/map_icon.png" height="40"/>
+            Rutas
+        </li>
     </ul>
     <div class="pestana" id="informacion">
     
